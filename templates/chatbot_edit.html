@@ -1,0 +1,95 @@
+<!-- ==================== CHATBOT ==================== -->
+<form id="chatbot-info" enctype="multipart/form-data">
+<div class="tab-content" id="v-pills-tabContent">
+    <div class="alert alert-danger chatbot-error" role="alert" style="display:none"></div>
+    <div class="alert alert-success chatbot-success" role="alert" style="display:none"></div>
+    <input type="hidden" name="chatbot_id" id="chatbot_id" value="{{ chatbot_row.id }}">
+    <div class="card card-create-bot">
+        <div class="card-body">
+            
+            {{ csrf_token()|raw }}
+            
+           
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="keyword">{{_('Keyword')}}</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="keyword" name="keyword" placeholder="{{_('Keyword')}}" value=" {{ chatbot_row.keyword }}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="reply">{{_('Reply')}}</label>
+                <div class="col-sm-8">
+                    <textarea name="reply" maxlength="500" id="reply" class="form-control" rows="4" placeholder="{{_('Type what to reply...')}}">{{ chatbot_row.reply }}</textarea>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-4 col-form-label"  for="is_detect_keyword">
+                    {{_("Detect Keyword")}}
+                </label>
+                <div class="col-sm-2">
+                    <label class="switch">
+                        {% if chatbot_row.is_detect_keyword == 1 %}
+                            <input type="checkbox" name="is_detect_keyword" id="is_detect_keyword" checked >
+                        {% else %}
+                            <input type="checkbox" name="is_detect_keyword" id="is_detect_keyword" >
+                        {% endif %}
+                        
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-4 col-form-label"  for="is_matching_word">
+                    {{_("Matching Keyword")}}
+                </label>
+                <div class="col-sm-8">
+                    <label class="switch">
+                        {% if chatbot_row.is_matching_word == 1 %}
+                            <input type="checkbox" name="is_matching_word" id="is_matching_word" checked>
+                        {% else %}
+                            <input type="checkbox" name="is_matching_word" id="is_matching_word" >
+                        {% endif %}
+                        
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            
+            
+            <div class="row">
+                <label class="col-sm-4 col-form-label"  for="is_global">
+                    {{_("Global")}}
+                </label>
+                <div class="col-sm-8">
+                    <label class="switch">
+                        {% if chatbot_row.is_global == 1 %}
+                            <input type="checkbox" name="is_global" id="is_global" checked >
+                        {% else %}
+                            <input type="checkbox" name="is_global" id="is_global" >
+                        {% endif %}
+                        
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="status">{{_("Status")}}</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="status" id="status">
+                        <option value="1" {% if chatbot_row.status == 1 %}selected{% endif %}>{{_("Active")}}</option>
+                        <option value="2" {% if chatbot_row.status == 2 %}selected{% endif %}>{{_("Inactive")}}</option>
+                    </select>
+                   
+                </div>
+            </div>
+           
+        </div>
+        <div class="card-footer card-footer p-0 pt-3">
+            <button type="button" class="btn btn-primary update-chatbot">{{_("Submit")}}</button>
+            <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger ">{{_("Close")}}</button>
+        </div>
+    </div>
+</div>
+ </form>
+ <!-- ==================== /CHATBOT ==================== -->

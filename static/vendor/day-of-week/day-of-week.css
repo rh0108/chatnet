@@ -1,0 +1,26 @@
+.day-of-week {
+  display: inline-block;
+}
+
+.day-of-week input {
+  display: none
+}
+
+.day-of-week input+label {
+    color: #eee;
+    background: #2b3036;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    width: 1.5em;
+    text-align: center;
+    display: inline-block;
+    margin-right: 0.25em;
+}
+
+.day-of-week input:checked+label {
+  color: white;
+  background: #1cc88a;
+  border: 1px solid #1cc88a;
+}
+
+[maxlength="7"]{width:7em}

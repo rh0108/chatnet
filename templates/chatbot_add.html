@@ -1,0 +1,119 @@
+<!-- ==================== CHATBOT ==================== -->
+<ul class="nav nav-pills mb2">
+    <li class="nav-item">
+        <a class="nav-link active" id="create-bot-tab" data-toggle="pill" href="#create-bot" role="tab" aria-controls="create-bot" aria-selected="true"><i class="fas fa-user"></i> {{_("New Chatbot")}}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="chatbot-list-tab" data-toggle="pill" href="#chatbot-list" role="tab" aria-controls="chatbot-list" aria-selected="false"><i class="fas fa-user-clock"></i> {{_("Bot Lists")}}</a>
+    </li>
+
+</ul>
+<hr style="margin-bottom:5px;">
+<form id="chatbot-info" enctype="multipart/form-data">
+<div class="tab-content" id="v-pills-tabContent">
+    <div class="alert alert-danger chatbot-error" role="alert" style="display:none"></div>
+    <div class="alert alert-success chatbot-success" role="alert" style="display:none"></div>
+    <input type="hidden" name="bot_id" id="bot_id" value="">
+    <div class="tab-pane fade show active" id="create-bot" role="tabpanel" aria-labelledby="create-bot-tab">
+        <div class="card card-create-bot">
+            <div class="card-body">
+              
+                {{ csrf_token()|raw }}
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="keyword">{{_('Keyword')}}</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="keyword" name="keyword" placeholder="{{_('Keyword')}}" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="reply">{{_('Reply')}}</label>
+                    <div class="col-sm-8">
+                        <textarea name="reply" maxlength="500" id="reply" class="form-control" rows="4" placeholder="{{_('Type what to reply...')}}"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4 col-form-label"  for="is_detect_keyword">
+                        {{_("Detect Keyword")}}
+                    </label>
+                    <div class="col-sm-2">
+                        <label class="switch">
+                            <input type="checkbox" name="is_detect_keyword" id="is_detect_keyword" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4 col-form-label"  for="is_matching_word">
+                        {{_("Matching Keyword")}}
+                    </label>
+                    <div class="col-sm-8">
+                        <label class="switch">
+                            <input type="checkbox" name="is_matching_word" id="is_matching_word" >
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                
+                <div class="row">
+                    <label class="col-sm-4 col-form-label"  for="is_global">
+                        {{_("Global")}}
+                    </label>
+                    <div class="col-sm-8">
+                        <label class="switch">
+                            <input type="checkbox" name="is_global" id="is_global" >
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="status">{{_("Status")}}</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" name="status" id="status">
+                            <option value="1" >{{_("Active")}}</option>
+                            <option value="2" >{{_("Inactive")}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer card-footer p-0 pt-3">
+                <button type="button" class="btn btn-primary update-chatbot">{{_("Submit")}}</button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger ">{{_("Close")}}</button>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="chatbot-list" role="tabpanel" aria-labelledby="chatbot-list-tab">
+        <div class="card card-create-bot">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>{{_("Keyword")}}</th>
+                                <th>{{_("Reply")}}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for chatbot_list_val in chatbot_list %}
+                            <tr>
+                                <td>{{chatbot_list_val.keyword}}</td>
+                                <td>{{chatbot_list_val.reply}}</td>
+                                <td>
+                                    <div class="text-nowrap">
+                                        <button type="button"  class="btn btn-primary btn-xs kick-btn edit-chatbot" data-chtbot="{{chatbot_list_val.id}}" data-restriction-type="3" style="display:inline-block"><i class="fas fa-eye"></i> Edit</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+ </form>
+<!-- ==================== /CHATBOT ==================== -->
