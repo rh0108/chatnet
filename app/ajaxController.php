@@ -278,6 +278,24 @@ class ajaxController{
         
         return json_response($shcedule_messages);
     }
+    /**----------------start my code------------------------- */
+    // delete current user's sended schedule messages
+    public function delete_sended_schedule_messages(){        
+        $post_data = app('request')->body;
+        $currnet_room_id = clean($post_data['room_id']);
+        $current_user_id = clean($post_data['current_user_id']);
+        $schedule_time = clean($post_data['schedule_time']);
+
+        $shcedule_messages = app('chat')->deleteSendedScheduleMessages(
+            $currnet_room_id,
+            app('auth')->user()['id'],
+            $current_user_id,
+            $schedule_time      
+        );
+        
+        return json_response($shcedule_messages);
+    }
+    /**----------------end my code------------------------- */
     /*============================ /SCHEDULER ============================*/
 
     // main heartbeat function to keep the chat alive.

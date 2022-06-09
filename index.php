@@ -115,6 +115,9 @@ if (file_exists(BASE_PATH.'config/settings.php')) {
     $route->any('ajax/save-schedule-message', 'App\ajaxController@save_schedule_message')->as('ajax-save-schedule-message');
     $route->any('ajax/get-schedule-messages', 'App\ajaxController@get_schedule_messages')->as('ajax-get-schedule-messages');
     $route->any('ajax/delete-schedule-messages', 'App\ajaxController@delete_schedule_messages')->as('ajax-delete-schedule-messages');
+    /**----------------start my code------------------------- */
+    $route->any('ajax/delete-sended-schedule-messages', 'App\ajaxController@delete_sended_schedule_messages')->as('ajax-delete-sended-schedule-messages');
+    /**----------------end my code------------------------- */
     /*============================ /SCHEDULER ============================*/
 
     $route->any('ajax/get-active-info', 'App\ajaxController@get_active_info')->as('ajax-get-active-info');

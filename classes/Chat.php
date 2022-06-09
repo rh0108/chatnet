@@ -210,7 +210,7 @@ class Chat {
 
     //Delete current user's schedule messages
     function deleteScheduleMessages($room_id, $sender, $user_id) {
-     app('db')->where('room_id', $room_id);
+        app('db')->where('room_id', $room_id);
         app('db')->where('sender_id', $sender);
         if($user_id > $sender) {                        
             app('db')->where('user_2', $user_id);
@@ -218,8 +218,23 @@ class Chat {
             app('db')->where('user_1', $user_id);
         }
         $del_schedule_messages = app('db')->delete('schedule_chats');
-        return $del_schedule_messages;   
+        return $del_schedule_messages;
     }
+    /**----------------start my code------------------------- */
+    //Delete current user's sended schedule messages
+    function deleteSendedScheduleMessages($room_id, $sender, $user_id, $schedule_time) {
+        app('db')->where('room_id', $room_id);
+        app('db')->where('sender_id', $sender);
+        app('db')->where('time', $schedule_time);
+        if($user_id > $sender) {                        
+            app('db')->where('user_2', $user_id);
+        }else{
+            app('db')->where('user_1', $user_id);
+        }
+        $del_schedule_messages = app('db')->delete('schedule_chats');
+        return $del_schedule_messages;
+    }
+    /**----------------end my code------------------------- */
 /*============================ /SCHEDULER ============================*/
 
     // Get active users list

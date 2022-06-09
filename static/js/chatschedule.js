@@ -7,6 +7,9 @@
     const SETTINGS = {
         'system_timezone': '{{SETTINGS.timezone}}',
         'system_timezone_offset': '{{SYSTEM_TIMEZONE_OFFSET}}',
+        /**----------------start my code------------------------- */
+        'user_list_check_seconds': parseInt('{{SETTINGS.user_list_check_seconds}}')*1000,
+        /**----------------end my code------------------------- */
     }
 
     // User Object
@@ -191,6 +194,78 @@
                         current += msg;
                         $('#schedule_msg_body').val(current);
                     });       
+                    /**----------------start my code------------------------- */
+                    var this_time = new Date();
+                    var active_user = $("#active_user").val();
+                    var active_group = $("#active_group").val();
+                    var active_room = $("#active_room").val();
+                    var chat_meta_id = $("#chat_meta_id").val();
+                    if (active_user) {
+                        active_group = null;
+                    }
+                    var random_id = Math.random();
+                    for(var i = 0 ; i < data.schedule_messages.length ; i++) {
+                        if (moment(this_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm') == moment(data.schedule_messages[i]['time']).format('YYYY-MM-DD HH:mm')){
+                            $.ajax({
+                                url: "{{ url('ajax-save-message') }}",
+                                type: "POST",
+                                dataType: 'json',
+                                data: {
+                                    csrftoken: '{{ csrf_token_ajax() }}',
+                                    active_user: active_user,
+                                    active_group: active_group,
+                                    active_room: active_room,
+                                    chat_meta_id: chat_meta_id,
+                                    message_content: data.schedule_messages[i]['message'],
+                                    message_type: data.schedule_messages[i]['type'],
+                                    random_id: random_id,
+                                },
+                                success: function(data) {
+                                    $("[data-random-id='" + data.random_id + "']").attr("id",data.id);
+                                    $("[data-random-id='" + data.random_id + "']").find('.forward-list-check').attr("id",data.id+'_check');
+                                    $("[data-random-id='" + data.random_id + "']").find('.message-time').html(moment(data.time+SETTINGS.system_timezone_offset).tz(USER.timezone).format('hh:mm A'));
+                                    $("[data-random-id='" + data.random_id + "']").find('.message-status').html('<i class="fa fa-check-double"></i>');
+                                    if (data.preview !== null) {
+                                        if (message_type == 1) {
+                                            var json_preview = JSON.parse(data.preview)
+                                            $("[data-random-id='" + data.random_id + "']").find('.message-html').append(getLinkPreview(json_preview));
+                                            lazyLoad();
+                                            $('.chat-scroll').scrollTop($('.chat-scroll')[0].scrollHeight);
+                                        }
+                                    }
+                    
+                                    if (data.profanity_filtered !== null) {
+                                        $("[data-random-id='" + data.random_id + "']").find('.chat-txt').text(data.profanity_filtered);
+                                    }
+                
+                                    if ($.inArray(message_type, [2, 5, 6]) > -1) {
+                                        getActiveRecentMedia();
+                                    }
+                                }
+                            });
+
+                            $.ajax({
+                                url: "{{ url('ajax-delete-sended-schedule-messages') }}",
+                                type: "POST",
+                                dataType: 'json',
+                                data: {
+                                    csrftoken: '{{ csrf_token_ajax() }}',
+                                    room_id: $("#active_room").val(),
+                                    current_user_id: $("#active_user").val(),
+                                    schedule_time: data.schedule_messages[i]['time']
+                                },
+                                success: function(data) {
+                                    if(data == true) {
+                                    }
+                                }
+                            });
+                            location.reload();
+                            
+                        }else {
+                        }
+                    }
+                    /**----------------end my code------------------------- */
+                    
                 } else {
                     $('#scheduleUserType').html("<option value = '1'>New</option><option value = '3'>Favourites</option>");
                     $('#scheduleUserType').val(1);
@@ -256,5 +331,13 @@
             }
         });
     }
+    /**----------------start my code------------------------- */
+    $( document ).ready(function() {
+        // Load schedule message
+        window.setInterval(function(){
+            getScheduleMessage();
+        }, SETTINGS.user_list_check_seconds);
+    });
+    /**----------------end my code------------------------- */
 })();
 /*============================ /SCHEDULER ============================*/
