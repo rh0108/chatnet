@@ -592,3 +592,141 @@ $(document).on('change', '#user_list_type', function() {
         $('.user-list-auth-roles').hide();
     }
 });
+
+// ==================== CHATBOT ====================
+$(document).on("click", ".new-chatbot", function(){
+    get_chatbot();
+});
+function get_chatbot(){
+    $.ajax({
+        url: "{{ url('ajax-get-chatbot') }}",
+        data: {
+            csrftoken: '{{ csrf_token_ajax() }}'
+        },
+        type: "POST",
+        beforeSend: function() {
+            loading(".card-room-users", "show");
+        },
+        success: function(data) {
+            if(data.success == "false"){
+                toastr.error(
+                    data.message, '',
+                    {
+                        timeOut: 1500,
+                        fadeOut: 1500,
+                        onHidden: function () {
+                            window.location.reload();
+                        }
+                    }
+                );
+            }else{
+                $('.rooms-modal .modal-body').html(data);
+                setTimeout(function(){ $('.rooms-modal').modal('show'); }, 500);
+                $('#chatroomList').modal('hide');
+                $('.dataTable').DataTable();
+            }
+        },
+        complete: function(){
+            loading(".card-room-users", "hide");
+        }
+    });
+}
+
+$(document).on("click", '.update-chatbot', function(event) {
+   
+    var data = new FormData($('#chatbot-info')[0]);
+    $('.chatbot-success').hide();
+    $('.chatbot-error').hide();
+    $.ajax({
+        url: "{{ url('ajax-update-chatbot') }}",
+        data: data,
+        type: "POST",
+        dataType: 'json',
+        contentType: false,
+        processData: false,
+        enctype: 'multipart/form-data',
+        beforeSend: function() {
+            loading(".card-room-info", "show");
+        },
+        success: function(data) {
+            console.log(data);
+            $('.text-error').remove();
+
+            if(data.success == true) {
+                // alert();
+                toastr["success"](data.message);
+            }else{
+                if ($.isArray(data.message)) {
+                    $.each( data.message, function( key, field_array ) {
+                        $.each( field_array, function( field, error_list ) {
+                            $.each( error_list, function( error_key, error_message ) {
+                                $('[name='+field+']').after(`<small class="form-text text-danger text-error">`+error_message+`</small>`);
+                            });
+                        });
+                    });
+                } else {
+                    toastr.error(
+                        data.message, '',
+                        {
+                            timeOut: 1500,
+                            fadeOut: 1500,
+                            onHidden: function () {
+                                window.location.reload();
+                            }
+                        }
+                    );
+                }
+            }
+
+        },complete: function(){
+            loading(".card-room-info", "hide");
+        }
+    });
+
+    $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+
+        $('.chatroom-success').hide();
+        $('.chatroom-error').hide();
+    });
+});
+$(document).on("click", '.edit-chatbot', function(event) {
+    var chatbot_id = $(this).attr('data-chtbot');
+    get_chatbot_by_id(chatbot_id);
+});
+function get_chatbot_by_id(chatbot_id)
+{
+    $.ajax({
+        url: "{{ url('ajax-get-chatbot-row') }}",
+        data: {
+            csrftoken: '{{ csrf_token_ajax() }}',
+            chatbot_id : chatbot_id
+        },
+        type: "POST",
+        beforeSend: function() {
+            loading(".card-room-users", "show");
+        },
+        success: function(data) {
+            if(data.success == "false"){
+                toastr.error(
+                    data.message, '',
+                    {
+                        timeOut: 1500,
+                        fadeOut: 1500,
+                        onHidden: function () {
+                            // window.location.reload();
+                        }
+                    }
+                );
+            }else{
+                $('.rooms-modal .modal-body').html(data);
+                setTimeout(function(){ $('.rooms-modal').modal('show'); }, 500);
+                $('#chatroomList').modal('hide');
+                $('.dataTable').DataTable();
+            }
+        },
+        complete: function(){
+            loading(".card-room-users", "hide");
+        }
+    });
+}
+// ==================== /CHATBOT ====================

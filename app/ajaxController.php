@@ -2105,6 +2105,30 @@ class ajaxController{
         return json_response($data);
     }
     
+    // ==================== CHATBOT ====================
+    public function get_chatbot(){
+        $post_data = app('request')->body;
+        $current_user = app('auth')->user()['id'];
+        $data = array();
+        app('db')->where ('user_id', $current_user);
+        $data['chatbot_list'] = app('db')->get('chatbot');
+        echo app('twig')->render('chatbot_add.html', $data);
+    }
+    public function update_chatbot(){
+        $post_data = app('request')->body;
+        $update_chatbot = app('admin')->updateChatbot($post_data);
+        return $update_chatbot;
+    }
+    public function get_chatbot_row()
+    {
+        $post_data = app('request')->body;
+        $current_user = app('auth')->user()['id'];
+        $data = array();
+        app('db')->where ('id', $post_data['chatbot_id']);
+        $data['chatbot_row'] = app('db')->getOne('chatbot');
+        echo app('twig')->render('chatbot_edit.html', $data);
+    }
+    // ==================== /CHATBOT ====================
 
 
 

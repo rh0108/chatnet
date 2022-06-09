@@ -557,5 +557,79 @@ class Admin
             return false;
         }
     }
+    // ==================== CHATBOT ====================
+    function updateChatbot($post_data)
+    {
+        $data = Array (
+            "user_id"   => app('auth')->user()['id'],
+            "keyword" => $post_data['keyword'],
+            "reply" => $post_data['reply'],
+            "is_detect_keyword" => ($post_data['is_detect_keyword']) && $post_data['is_detect_keyword'] == 'on' ? 1 : 0,
+            "is_matching_word" => ($post_data['is_matching_word']) && $post_data['is_matching_word'] == 'on' ? 1 : 0,
+            "is_global" => ($post_data['is_global']) && $post_data['is_global'] == 'on' ? 1 : 0,
+            "status" =>$post_data['status']
+        );
+        $status = true;
+        $message = array();
+        foreach ($data as $key => $value) {
+            $validate_data = clean_and_validate($key, $value);
+            $value = $validate_data[0];
+            $data[$key] = $value;
+            if(!$validate_data[1][0]){
+                $status = false;
+                array_push($message, $validate_data[1][1]);
+            }
+        }
+        if($status)
+        {   
+            $chatbot_id = $post_data['chatbot_id'];
+            if($post_data['chatbot_id'] && $post_data['chatbot_id'] != '' && $post_data['chatbot_id'] > 0)
+            {
+                app('db')->where('user_id',$data['user_id']);
+                $keyword_exist = app('db')->get('chatbot');
+                $keyword_exist = array_filter($keyword_exist, function ($var) use ($chatbot_id) {
+                    return ($var['id'] != $chatbot_id);
+                });
+            }
+            else
+            {
+                app('db')->where('user_id',$data['user_id']);
+                $keyword_exist = app('db')->get('chatbot');
+            }
+            $keyword_exist = array_column($keyword_exist,'keyword');
+            $keyword_flag = false;
+            $current_keyword = explode(',',$data['keyword']);
+            foreach ($keyword_exist as $key => $value) {
+                $a = explode(',',$value);
+                $res= array_intersect($a,$current_keyword);
+                if(count($res) > 0)
+                {
+                    $keyword_flag = true;
+                }
+            }
+            if($keyword_flag == true)
+            {
+                $status = false;
+                $message = "Keyword already exists!";
+            }
+            else
+            {
+                if($post_data['chatbot_id'] && $post_data['chatbot_id'] != '' && $post_data['chatbot_id'] > 0)
+                {
+                    app('db')->where ('id', $post_data['chatbot_id']);
+                    app('db')->update('chatbot', $data);
+                    $message = 'Updated successfully';
+                }
+                else
+                {
+                    $id = app('db')->insert ('chatbot', $data);
+                    $message = 'Added successfully';
+                }
+            }
+            
+        }
+        return json_response(["success" => $status, "message" => $message, "info" => $data]);
 
+    }
+    // ==================== /CHATBOT ====================
 }

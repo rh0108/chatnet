@@ -303,6 +303,14 @@ function clean_get_validation_rules($field, $value){
         case "country":
             return array($value, array(['lengthMax' => '2']));
             break;
+        // ==================== CHATBOT ====================
+        case "keyword":
+            return array($value, array('required'));
+            break;
+        case "reply":
+            return array($value, array('required'));
+            break;
+        // ==================== /CHATBOT ====================
         default:
             return array($value, false);
     }

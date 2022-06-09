@@ -178,7 +178,11 @@ if (file_exists(BASE_PATH.'config/settings.php')) {
     $route->any('ajax/notification-delete', 'App\ajaxController@notification_delete')->as('ajax-delete-noti');
     $route->any('ajax/notification-unread-count', 'App\ajaxController@notification_unread_count')->as('ajax-noti-unread-count');
     $route->any('ajax/get-recent-active-media', 'App\ajaxController@get_recent_active_media')->as('ajax-get-active-recent-media');
-    
+    // ==================== CHATBOT ====================
+    $route->any('ajax/get-chatbot', 'App\ajaxController@get_chatbot')->as('ajax-get-chatbot');
+    $route->any('ajax/update-chatbot', 'App\ajaxController@update_chatbot')->as('ajax-update-chatbot');
+    $route->any('ajax/get-chatbot-row', 'App\ajaxController@get_chatbot_row')->as('ajax-get-chatbot-row');
+    // ==================== /CHATBOT ====================
 
     // cron jobs
     $route->any('cron/delete-guests', 'App\cronController@delete_guests')->as('cron-delete-guests');
