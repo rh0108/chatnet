@@ -182,6 +182,10 @@ if (file_exists(BASE_PATH.'config/settings.php')) {
     $route->any('ajax/get-chatbot', 'App\ajaxController@get_chatbot')->as('ajax-get-chatbot');
     $route->any('ajax/update-chatbot', 'App\ajaxController@update_chatbot')->as('ajax-update-chatbot');
     $route->any('ajax/get-chatbot-row', 'App\ajaxController@get_chatbot_row')->as('ajax-get-chatbot-row');
+    /**=======================my code=========================== */
+    $route->any('ajax/update-chatbot-time', 'App\ajaxController@update_chatbot_time')->as('ajax-update-chatbot-time');
+    $route->any('ajax/delete-chatbot', 'App\ajaxController@delete_chatbot')->as('ajax-delete-chatbot');
+    /**=======================my code=========================== */
     // ==================== /CHATBOT ====================
 
     // cron jobs

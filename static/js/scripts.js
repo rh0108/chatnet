@@ -693,6 +693,29 @@ $(document).on("click", '.edit-chatbot', function(event) {
     var chatbot_id = $(this).attr('data-chtbot');
     get_chatbot_by_id(chatbot_id);
 });
+/**=======================my code=========================== */
+$(document).on("click", '.delete-chatbot', function(event) {
+    var chatbot_id = $(this).attr('data-chtbot');
+    delete_chatbot_by_id(chatbot_id);
+});
+
+function delete_chatbot_by_id(chatbot_id){
+    $.ajax({
+        url: "{{ url('ajax-delete-chatbot') }}",
+        data: {
+            csrftoken: '{{ csrf_token_ajax() }}',
+            chatbot_id : chatbot_id
+        },
+        type: "POST",
+        beforeSend: function() {
+            loading(".card-room-users", "show");
+        },
+        success: function(data) {
+            window.location.reload();
+        }
+    });
+}
+/**=======================my code=========================== */
 function get_chatbot_by_id(chatbot_id)
 {
     $.ajax({

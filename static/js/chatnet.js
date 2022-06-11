@@ -327,6 +327,22 @@ function newMessage(message_data, message_type, decode=true){
 
 }
 
+/**====================my code======================= */
+//update sent chatbot time
+function updateChatBotTime(id, update_time){
+    $.ajax({
+        url: "{{ url('ajax-update-chatbot-time') }}",
+        type: "POST",
+        dataType: 'json',
+        data: {
+            csrftoken: '{{ csrf_token_ajax() }}',
+            id:id,
+            update_time:update_time
+        },
+        success: function(data) {}
+    });
+}
+/**====================my code======================= */
 
 // get sticker functions
 function get_strickers(){
@@ -4925,6 +4941,51 @@ $( document ).ready(function() {
                 },
                 success: function(data) {
                     if (data.updated_chats.length > 0) {
+                        /**=======================my code=========================== */
+                        if (data.updated_chats['0']['sender_id'] != USER.id) {
+                            var keywords = data.updated_chats['0']['message'].replace(/\./g," ").replace(/\?/g," ").replace(/\,/g," ").split(" ");
+                            var max_count = 0;
+                            var max_count_id = -1;
+                            var check = 0;
+                            // moment(this_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm') == moment(data.schedule_messages[i]['time']).format('YYYY-MM-DD HH:mm')
+                            for(var i=0;i <data.chatbot_list.length;i++) {
+                                var count = 0;
+                                var chatbot_keyword = data.chatbot_list[i]['keyword'].replace(/ /g,"").replace(/\./g,"").replace(/\?/g,"").split(",");
+                                var current_time = new Date();
+                                current_time.setDate(current_time.getDate() - 1);
+                                if(data.chatbot_list[i]['first'] == 0 || data.chatbot_list[i]['updated_at'] <= moment(current_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm:ss')){
+                                    if (data.chatbot_list[i]['is_matching_word'] == 1 && data.chatbot_list[i]['status'] == 1){
+                                        for (var j=0; j<chatbot_keyword.length; j++){
+                                            for (var k=0; k<keywords.length; k++){
+                                                if(chatbot_keyword[j] == keywords[k]){
+                                                    count++;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if (max_count < count){
+                                            max_count = count;
+                                            max_count_id = i;
+                                        }
+                                    }
+                                }
+                                // alert(chatbot_keyword.length);
+                                if(chatbot_keyword.length == 1 && keywords.length == 1 &&chatbot_keyword['0'] == keywords['0'] && data.chatbot_list[i]['is_detect_keyword'] == 1 && data.chatbot_list[i]['status'] == 1){
+                                    check = 1;
+                                    var update_time = new Date();
+
+                                    updateChatBotTime(data.chatbot_list[i]['id'],moment(update_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm:ss'));
+                                    newMessage(data.chatbot_list[i]['reply'].replace(/{NAME}/g,'{{ USER.user_name }}'), 1, false);
+                                }
+                                
+                            }
+                            if (max_count_id >= 0 && check == 0) {
+                                var update_time = new Date();
+                                updateChatBotTime(data.chatbot_list[max_count_id]['id'],moment(update_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm:ss'));
+                                newMessage(data.chatbot_list[max_count_id]['reply'].replace(/{NAME}/g,'{{ USER.user_name }}'), 1, false);
+                            }
+                        }
+                        /**=======================my code=========================== */
                         $.each(data.updated_chats, function( index, obj ) {
                             var updated_li = $(".messages ul").find("li[id="+ obj.id +"]");
                             if (obj.status == 2) {

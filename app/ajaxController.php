@@ -909,7 +909,12 @@ class ajaxController{
             $updated_chats = app('db')->get('group_chats');
 
         }
+        /**=======================my code=========================== */
 
+        $current_user = app('auth')->user()['id'];
+        app('db')->where ('user_id', $current_user);
+        $data['chatbot_list'] = app('db')->get('chatbot');
+        /**=======================my code=========================== */
         $data['updated_chats'] = $updated_chats;
 
         return json_response($data);
@@ -2128,6 +2133,24 @@ class ajaxController{
         $data['chatbot_row'] = app('db')->getOne('chatbot');
         echo app('twig')->render('chatbot_edit.html', $data);
     }
+    /**=======================my code=========================== */
+    public function update_chatbot_time(){
+        $post_data = app('request')->body;
+        $current_user = app('auth')->user()['id'];
+
+        $update_data = array('updated_at' => $post_data['update_time'], 'first' => 1);
+        app('db')->where ('id', $post_data['id']);
+        app('db')->update('chatbot', $update_data);
+    }
+
+    public function delete_chatbot(){
+        $post_data = app('request')->body;
+        $current_user = app('auth')->user()['id'];
+        $data = array();
+        app('db')->where ('id', $post_data['chatbot_id']);
+        app('db')->delete('chatbot');
+    }
+    /**=======================my code=========================== */
     // ==================== /CHATBOT ====================
 
 
