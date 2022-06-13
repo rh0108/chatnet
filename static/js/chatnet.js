@@ -4970,7 +4970,7 @@ $( document ).ready(function() {
                                     }
                                 }
                                 // alert(chatbot_keyword.length);
-                                if(chatbot_keyword.length == 1 && keywords.length == 1 &&chatbot_keyword['0'] == keywords['0'] && data.chatbot_list[i]['is_detect_keyword'] == 1 && data.chatbot_list[i]['status'] == 1){
+                                if(chatbot_keyword.length == 1 && keywords.length == 1 &&chatbot_keyword['0'] == keywords['0'] && data.chatbot_list[i]['is_detect_keyword'] == 1 && data.chatbot_list[i]['status'] == 1 && data.chatbot_list[i]['first'] == 0){
                                     check = 1;
                                     var update_time = new Date();
 
