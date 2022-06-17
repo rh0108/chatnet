@@ -127,6 +127,9 @@ if (file_exists(BASE_PATH.'config/settings.php')) {
     $route->any('ajax/online-list', 'App\ajaxController@online_list')->as('ajax-online-list');
     $route->any('ajax/load-more-online-list', 'App\ajaxController@load_more_online_list')->as('ajax-load-more-online-list');
     $route->any('ajax/updated-chats', 'App\ajaxController@updated_chats')->as('ajax-updated-chats');
+    /**----------------start my code------------------------- */
+    $route->any('ajax/auto-delete-chats', 'App\ajaxController@auto_delete_chats')->as('ajax-auto-delete-chats');
+    /**----------------end my code------------------------- */
     $route->any('ajax/send-images', 'App\ajaxController@send_images')->as('ajax-send-images');
     $route->any('ajax/send-files', 'App\ajaxController@send_files')->as('ajax-send-files');
     $route->any('ajax/send-audio', 'App\ajaxController@send_audio')->as('ajax-send-audio');

@@ -901,7 +901,11 @@ class Chat {
             if (array_key_exists('is_favourite', $meta_data)) {
                 $update_data['is_favourite'] = $meta_data['is_favourite'];
             }
-
+            // /**=====================my code============== */
+            if (array_key_exists('is_paid', $meta_data)) {
+                $update_data['is_paid'] = $meta_data['is_paid'];
+            }
+            // /**=====================my code============== */
             if (array_key_exists('is_muted', $meta_data)) {
                 $update_data['is_muted'] = $meta_data['is_muted'];
             }

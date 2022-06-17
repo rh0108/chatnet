@@ -498,11 +498,27 @@ function getActiveInfo(user_show=false, load_panel=true){
                 }else{
                     $('.active-user-about').hide();
                 }
+                /**===============my code================ */
+                $('.active-user-paid').attr('data-is-paid', data.info.is_paid);
+                /**===============my code================ */
                 $('.active-user-favourite').attr('data-is-favourite', data.info.is_favourite);
                 $('.active-user-mute').attr('data-is-muted', data.info.is_muted);
                 $('.active-user-block').attr('data-is-blocked', data.info.blocked_by_you);
                 $('.active-user-info').find('.init-report').attr('data-report-for', active_user);
                 $('.active-user-info').find('.init-report').attr('data-report-header', '{{_("User")}} - ' + display_name);
+
+                /**===============my code================ */
+                if(data.info.is_paid){
+                    $('.active-user-paid .icon').html('<i class="fas fa-comment"></i>');
+                    $('.active-user-paid').attr('title', "{{_('Remove from Paid')}}");
+                    $('.active-user-paid .action-title').html("{{_('Remove Paid')}}");
+                    
+                }else{
+                    $('.active-user-paid .icon').html('<i class="far fa-comment"></i>');
+                    $('.active-user-paid').attr('title', "{{_('Add to Paid')}}");
+                    $('.active-user-paid .action-title').html("{{_('Make Paid')}}");
+                }
+                /**===============my code================ */
 
                 if(data.info.is_favourite){
                     $('.active-user-favourite .icon').html('<i class="fas fa-heart"></i>');
@@ -3640,6 +3656,12 @@ $( document ).ready(function() {
 
     });
 
+    // paid or unpaid the selected chat user
+    $(document).on('click', '.active-user-paid', function(e) {
+        var current_status = $(this).attr("data-is-paid");
+        changeActiveUserRestriction('is_paid', current_status);
+    });
+
     // favourite or unfavourite the selected chat user
     $(document).on('click', '.active-user-favourite', function(e) {
         var current_status = $(this).attr("data-is-favourite");
@@ -5004,6 +5026,51 @@ $( document ).ready(function() {
                     updated_chats_heartbeat_status = 1; //complete
                 }
             });
+
+            var this_time = new Date();
+            var one_ago_time = new Date();
+            var two_ago_time = new Date();
+            var three_ago_time = new Date();
+            one_ago_time.setTime(one_ago_time.getTime() - 60 * 60 * 1000);
+            two_ago_time.setTime(two_ago_time.getTime() - 120 * 60 * 1000);
+            three_ago_time.setTime(three_ago_time.getTime() - 180 * 60 * 1000);
+            this_time = moment(this_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm:ss');
+            one_ago_time = moment(one_ago_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm:ss');
+            two_ago_time = moment(two_ago_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm:ss');
+            three_ago_time = moment(three_ago_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm:ss');
+            $.ajax({
+                url: "{{ url('ajax-auto-delete-chats') }}",
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    csrftoken: '{{ csrf_token_ajax() }}',
+                    this_time: this_time,
+                    one_ago_time: one_ago_time,
+                    two_ago_time: two_ago_time,
+                    three_ago_time: three_ago_time,
+                    active_group: active_group,
+                    active_room: active_room,
+                    active_user: active_user,
+                    
+                },
+                success: function(data) {
+                    if(data.success){
+                    }else{
+                        toastr.error(
+                            data.message, '',
+                            {
+                                timeOut: 1500,
+                                fadeOut: 1500,
+                                onHidden: function () {
+                                    window.location.reload();
+                                }
+                            }
+                        );
+                    }
+
+                }
+            });
+
         }
     }, SETTINGS.chat_status_check_seconds);
 

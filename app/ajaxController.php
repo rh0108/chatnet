@@ -477,8 +477,10 @@ class ajaxController{
             app('db')->join("private_chat_meta pc", "pc.to_user=u.id AND pc.id = $private_min_pc_Q AND pc.from_user=".app('auth')->user()['id'], "LEFT");
             app('db')->join("private_chat_meta pcr", "pcr.from_user=u.id AND pcr.id = $private_min_pcr_Q AND pcr.to_user=".app('auth')->user()['id'], "LEFT");
             app('db')->where('u.id', $post_data['active_user']);
+            // /**===================my code===================== */
             $cols = Array("u.id, u.first_name, u.last_name, u.user_name, u.sex, u.user_type, u.country, u.avatar, u.dob, u.about, u.available_status, 
-                pc.is_favourite, pc.is_muted, pc.is_blocked as blocked_by_you, pcr.is_blocked as blocked_by_him");
+                pc.is_favourite, pc.is_paid, pc.is_muted, pc.is_blocked as blocked_by_you, pcr.is_blocked as blocked_by_him");
+            // /**===================my code===================== */
             $user_data = app('db')->getOne('users u', $cols);
             $user_data['avatar_url'] = getUserAvatarURL($user_data);
             $data['info_type'] = "user";
@@ -880,7 +882,49 @@ class ajaxController{
 
         return json_response($data);
     }
+    // /**===========my code=================== */
+    //auto-delete chats
+    public function auto_delete_chats(){
+        $post_data = app('request')->body;
+        $data = array();
 
+        if($post_data['active_user']) {
+            if($post_data['active_user'] > app('auth')->user()['id']) {
+                $user_1 = app('auth')->user()['id'];
+                $user_2 = $post_data['active_user'];
+            }else{
+                $user_1 = $post_data['active_user'];
+                $user_2 = app('auth')->user()['id'];
+            }
+
+            app('db')->where ('user_1', $user_1);
+            app('db')->where ('user_2', $user_2);
+            app('db')->where ('auto_delete', 0, ">");
+            app('db')->where ('status', 3, "!=");
+            app('db')->orderBy("updated_at","desc");
+            $updated_chats = app('db')->get('private_chats');
+            for ($i = 0; $i <= count($updated_chats); $i ++){
+                if($updated_chats[$i]['auto_delete'] == 1 && $post_data['one_ago_time'] >= $updated_chats[$i]['updated_at']){
+                    app('db')->where('id', $updated_chats[$i]['id']);
+                    app('db')->update('private_chats', array('status' => 3));
+                    $data[$i] = $updated_chats[$i]['id'];
+                }else if($updated_chats[$i]['auto_delete'] == 2 && $post_data['two_ago_time'] >= $updated_chats[$i]['updated_at']){
+                    app('db')->where('id', $updated_chats[$i]['id']);
+                    app('db')->update('private_chats', array('status' => 3));
+                    $data[$i] = $updated_chats[$i]['id'];
+                    
+                }else if($updated_chats[$i]['auto_delete'] == 3 && $post_data['three_ago_time'] >= $updated_chats[$i]['updated_at']){
+                    app('db')->where('id', $updated_chats[$i]['id']);
+                    app('db')->update('private_chats', array('status' => 3));
+                    $data[$i] = $updated_chats[$i]['id'];
+                    
+                }
+            }
+        }
+        $data['success'] = 'true';
+        return json_response($data);
+    }
+    // /**===================my code===================== */
     // get read status, seen status and chat times
     public function updated_chats(){
 

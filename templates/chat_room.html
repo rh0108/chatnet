@@ -137,170 +137,7 @@
                 {{SETTINGS.ad_chat_left_bar|htmlspecialchars_decode|raw}}
             </div>
             {% endif %}
-            <div class="bottom-login-section">
-                <div class="dropup">
-                    <a class="" href="javascript:void(0)" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="dropdown-toggle dropdown-toggle-split user-fname user-dropdown">
-                            <div class="user-avatar">
-                                <div class="current-status online-status {{ USER.user_status_class }}"><i class="fa fa-circle"></i></div>
-                                {% if condition %}{% endif %}
-                                <img class="img-profile mr-2" src="{% if USER.avatar_url %}{{USER.avatar_url}}{% else %}{{STATIC_URL}}/img/user.png{% endif %}">
-                            </div>
-                            <span class="bottom-username">
-                                {% if IS_AUTHENTICATED %}
-                                {% if SETTINGS.display_name_format == 'username' %}
-                                    {{ USER.user_name }}
-                                {% else %}
-                                    {{ USER.first_name }}
-                                {% endif %}
-                                {% else %}
-                                {{ _('Guest') }}
-                                {% endif %}
-                            </span>
-                            
-                        </span>
-                    </a>
-                    <!-- Dropdown - User Information -->
-                    <div class="dropdown-menu dropdown-menu-right lite-shadow" aria-labelledby="userDropdown">
-                        {% if IS_AUTHENTICATED %}
-                        <a class="dropdown-item change-status" href="javascript:void(0)" data-status="1">
-                            <i class="fa fa-circle fa-fw mr-2 online"></i>{{ _('Online') }}
-                        </a>
-                        <a class="dropdown-item change-status" href="javascript:void(0)" data-status="2">
-                            <i class="fa fa-circle fa-fw mr-2 offline"></i>{{ _('Offline') }}
-                        </a>
-                        <a class="dropdown-item change-status" href="javascript:void(0)" data-status="3">
-                            <i class="fa fa-circle fa-fw mr-2 busy"></i>{{ _('Busy') }}
-                        </a>
-                        <a class="dropdown-item change-status" href="javascript:void(0)" data-status="4">
-                            <i class="fa fa-circle fa-fw mr-2 away"></i>{{ _('Away') }}
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        {% if SETTINGS.sso_enabled == false or SETTINGS.sso_allow_profile_edit == true %}
-                        <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#modalProfile">
-                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                            {{ _('Profile') }}
-                        </a>
-                        {% endif %}
-                        {% if USER.user_type == 1 %}
-                        <a class="dropdown-item" target="_blank" href="{{ url('dashboard') }}">
-                            <i class="fas fa-user-shield fa-sm fa-fw mr-2 text-gray-400"></i> {{ _('Admin Dashboard') }}
-                        </a>
-                        {% endif %}
-                        {% if USER.user_type == 2 %}
-                        <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#chatroomList">
-                            <i class="fas fa-comments fa-sm fa-fw mr-2 text-gray-400"></i>
-                            {{ _('My Rooms') }}
-                        </a>
-    
-                        {% endif %}
-    
-                        {% if (SETTINGS.enable_members_room is defined and SETTINGS.enable_members_room) and USER.user_type == 2 %}
-                            <a class="dropdown-item new-chatroom" href="javascript:void(0)">
-                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>{{ _('New Chat Room') }}
-                            </a>
-                        {% elseif (SETTINGS.enable_moderators_room is defined and SETTINGS.enable_moderators_room) and USER.user_type == 4 %}
-                            <a class="dropdown-item new-chatroom" href="javascript:void(0)">
-                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>{{ _('New Chat Room') }}
-                            </a>
-                        {% elseif USER.user_type == 1 %}
-                            <a class="dropdown-item new-chatroom" href="javascript:void(0)">
-                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>{{ _('New Chat Room') }}
-                            </a>
-                        {% endif %}
-    
-                        {% if USER.user_type == 1 or USER.user_type == 4 %}
-                        <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#chatroomList">
-                            <i class="fas fa-comments fa-sm fa-fw mr-2 text-gray-400"></i>
-                            {{ _('Manage Rooms') }}
-                        </a>
-                        {% endif %}
 
-                        <!-- ==================== CHATBOT ====================  -->
-                        <a class="dropdown-item new-chatbot" href="javascript:void(0)">
-                            <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>{{ _('New Chatbot') }}
-                        </a>
-                        <!-- <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#chatbotList">
-                            <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>{{ _('New Chatbot') }}
-                        </a> -->
-                        <!-- ==================== /CHATBOT ====================  -->
-    
-                        <div class="dropdown-divider"></div>
-    
-                        {% endif %}
-    
-                        {% if SETTINGS.theme == 'custom' and THEME != 'custom' %}
-                            <a class="dropdown-item" href="{{ url('settheme', {'reqtheme':'custom'}) }}">
-                                <i class="fas fa-adjust fa-sm fa-fw mr-2 text-gray-400"></i>
-                                {{ _('Switch to Default Theme') }}
-                            </a>
-                        {% endif %}
-                        {% if THEME != 'dark' %}
-                            <a class="dropdown-item" href="{{ url('settheme',  {'reqtheme':'dark'}) }}">
-                                <i class="fas fa-moon fa-sm fa-fw mr-2 text-gray-400"></i>
-                                {{ _('Switch to Dark Theme') }}
-                            </a>
-                        {% endif %}
-                        {% if THEME != 'light' %}    
-                        <a class="dropdown-item" href="{{ url('settheme',  {'reqtheme':'light'}) }}">
-                            <i class="fas fa-sun fa-sm fa-fw mr-2 text-gray-400"></i>
-                            {{ _('Switch to Light Theme') }}
-                        </a>
-                        {% endif %}
-                        {% if THEME != 'default' %}    
-                        <a class="dropdown-item" href="{{ url('settheme',  {'reqtheme':'default'}) }}">
-                            <i class="fas fa-cloud-moon fa-sm fa-fw mr-2 text-gray-400"></i>
-                            {{ _('Switch to Hybrid Theme') }}
-                        </a>
-                        {% endif %}
-    
-                        <div class="dropdown-divider"></div>
-    
-                        {% if SETTINGS.enable_about %}
-                        <a target="_blank" class="dropdown-item" href="{{ url('about') }}">{{ _('About Us') }}</a>
-                        {% endif %}
-    
-                        {% if SETTINGS.enable_contact %}
-                        <a target="_blank" class="dropdown-item" href="{{ url('contact') }}">{{ _('Contact Us') }}</a>
-                        {% endif %}
-    
-                        {% if SETTINGS.enable_privacy %}
-                        <a target="_blank" class="dropdown-item" href="{{ url('privacy') }}">{{ _('Privacy Policy') }}</a>
-                        {% endif %}
-    
-                        {% if SETTINGS.enable_terms %}
-                        <a target="_blank" class="dropdown-item" href="{{ url('terms') }}">{{ _("Terms & Conditions") }}</a>
-                        {% endif %}
-    
-                        <div class="dropdown-divider"></div>
-                        {% if IS_AUTHENTICATED %}
-                        <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#logoutModal">
-                            <i class="fas fa-power-off fa-sm fa-fw mr-2 text-gray-400"></i>
-                            {{ _('Logout') }}
-                        </a>
-                        {% else %}
-                        <a class="dropdown-item" {% if SETTINGS.sso_enabled and SETTINGS.sso_login_url %} href="{{ SETTINGS.sso_login_url }}" target="_parent" {% else %} href="{{ url('login') }}" {% endif %} >
-                            <i class="fas fa-power-off fa-sm fa-fw mr-2 text-gray-400"></i>
-                            {{ _('Sign In') }}
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-                {% if SETTINGS.enable_multiple_languages %}
-                <div class="dropup lang-selector ml-3">
-                    <button class="btn btn-sm btn-lang dropdown-toggle" type="button" id="langSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span id="selected-lang-toggle"> <span class="flag-icon flag-icon-{{ LANG['country'] }}"></span>  </span>
-                    </button>
-                    <div class="dropdown-menu scrollable-menu" aria-labelledby="langSelector">
-                        {% for select_lang in lang_list %}
-                            <a class="dropdown-item {% if select_lang.code == LANG %}selected-lang{%endif%}" href="{{ url('setlang', {'reqlang':select_lang.code}) }}">
-                                <span class="flag-icon flag-icon-{{select_lang.country}}"></span> {{select_lang.name}}
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-            </div>
         </div>
         
     </div>
@@ -341,155 +178,154 @@
                             <!-- Right Sidebar Toggle -->
                             {% if hide_chat_list == false %}
                             <button class="chat-list-toggle btn btn-success btn-circle btn-sm">
-                                <div class='all-room-unread-2'>
-                                    <span class="badge badge-danger badge-all-unread all-unread-2"></span>
-                                </div>
                                 <i class="fas fa-arrows-alt-h"></i>
                             </button>
                             {% endif %}
                             <div class="chat-header">
                                 <h1 class="chat-title"></h1>
                                 <small class="chat-slug"></small>
-                            </div>
-                            <div class="chat-title-dd dropdown">
-                                <a class="nav-link p-0" href="javascript:void(0)" id="infoDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="dropdown-togglex dropdown-toggle-split ">
-                                        <i class="fa fa-solid fa-caret-down"></i>
-                                    </span>
-                                </a>
-                                <!-- Dropdown - Chat Information -->
-                                <div class="dropdown-menu dropdown-menu-right lite-shadow" aria-labelledby="infoDropdown">  
-                                    <div class="active-group-action">
-                                        <a href="javascript:void(0)" title="{{ _('Mute') }}" class="dropdown-item active-group-mute " data-is-muted="0">
-                                            <span class="icon">
-                                                <i class="fas fa-bell-slash"></i>
-                                            </span>
-                                            <span class="action-title">
-                                                {{ _('Mute') }}
-                                            </span>
-                                        </a>
-                    
-                                        <a href="javascript:void(0)" class="dropdown-item init-report" data-report-type="3" data-report-header="" data-report-for="" >
-                                            <span class="icon">
-                                                <i class="fas fa-flag"></i>
-                                            </span>
-                                            {{ _('Report') }}
-                                        </a>
-                    
-                                        <a href="javascript:void(0)" class="dropdown-item clear-chats" >
-                                            <span class="icon">
-                                                <i class="fas fa-comment-slash"></i>
-                                            </span>
-                                            {{ _('Clear Chats') }}
-                                        </a>
-                    
-                                        <a href="javascript:void(0)" class="dropdown-item leave-room" data-room="{{chat_room.id}}" >
-                                            <span class="icon">
-                                                <i class="fas fa-sign-out-alt"></i>
-                                            </span>
-                                            {{ _('Leave Room') }}
-                                        </a>
-
-                                        {% if (SETTINGS.enable_members_room is defined and SETTINGS.enable_members_room) and USER.user_type == 2 %}
-                                        <a class="dropdown-item new-chatroom" href="javascript:void(0)">
-                                            <span class="icon">
-                                                <i class="fas fa-plus"></i>
-                                            </span>
-                                            {{ _('New Chat Room') }}
-                                        </a>
-                                        {% elseif (SETTINGS.enable_moderators_room is defined and SETTINGS.enable_moderators_room) and USER.user_type == 4 %}
-                                            <a class="dropdown-item new-chatroom" href="javascript:void(0)">
-                                                <span class="icon">
-                                                    <i class="fas fa-plus"></i>
-                                                </span>
-                                                {{ _('New Chat Room') }}
-                                            </a>
-                                        {% elseif USER.user_type == 1 %}
-                                            <a class="dropdown-item new-chatroom" href="javascript:void(0)">
-                                                <span class="icon">
-                                                    <i class="fas fa-plus"></i>
-                                                </span>
-                                                {{ _('New Chat Room') }}
-                                            </a>
-                                        {% endif %}
-                                        
-                                        {% if ( USER.user_type == 1 or USER.user_type == 4  or chat_room.created_by == USER.id or is_mod) and chat_room   %}
-                                            <div class="dropdown-divider"></div>
-                                            <a href="javascript:void(0)" class="dropdown-item view-chatroom"  data-room="{{chat_room.id}}" >
-                                                <span class="icon">
-                                                    <i class="fas fa-users-cog"></i>
-                                                </span>
-                                                {{ _('Manage') }}
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                    <div class="active-user-action">
-                                        <a href="javascript:void(0)" title="{{_('Make Favorite')}}" class="dropdown-item active-user-favourite" data-is-favourite="0">
-                                            <span class="icon">
-                                                <i class="far fa-heart"></i>
-                                            </span>
-                                            <span class="action-title">
-                                                {{_('Make Favorite')}}
-                                            </span>
-                                        </a>
-                                        <a href="javascript:void(0)" title="{{_('Block')}}" class="dropdown-item active-user-block" data-is-blocked="0">
-                                            <span class="icon">
-                                                <i class="far fa-circle"></i>
-                                            </span>
-                                            <span class="action-title">
-                                                {{_('Block')}}
-                                            </span>
-                                        </a>
-                                        <a href="javascript:void(0)" title="{{_('Mute')}}" class="dropdown-item active-user-mute" data-is-muted="0">
-                                            <span class="icon">
-                                                <i class="fas fa-bell-slash"></i>
-                                            </span>
-                                            <span class="action-title">
-                                                {{ _('Mute') }}
-                                            </span>
-                                        </a>
-                                        <a href="javascript:void(0)" title="{{ _('Report') }}" class="dropdown-item init-report" data-report-type="2" data-report-header="" data-report-for="" >
-                                            <span class="icon">
-                                                <i class="fas fa-flag"></i>
-                                            </span>
-                                            {{ _('Report') }}
-                                        </a>
-                                        <a href="javascript:void(0)" title="{{ _('Clear Chats') }}" class="dropdown-item clear-chats" >
-                                            <span class="icon">
-                                                <i class="fas fa-comment-slash"></i>
-                                            </span>
-                                            {{ _('Clear Chats') }}
-                                        </a>
-                                    </div>
-                                    
-                                    <div class="dropdown-divider"></div>
-
-                                    <a href="javascript:void(0)" class="dropdown-item selected-chat-toggle ">
-                                        <span class="icon">
-                                            <i class="fas fa-info-circle"></i>
-                                        </span>
-                                        {{ _('Toggle Chat Info') }}
-                                    </a> 
-                
-                                </div>
+                                <small class="is-typing"><span>{{ _('typing...') }}</span> <i class="fa fa-pencil-alt"></i></small>
                             </div>
                             <!-- Left Sidebar Toggle -->
-                            <div class="ml-auto d-flex">
+                            <div class="ml-auto">
                                 {# <button class="btn btn-info btn-circle btn-chat-search btn-sm d-none d-lg-block">
                                     <i class="fa fa-search"></i>
                                 </button> #}
-                                 
+                                <div>
+                                    <a class="nav-link p-0" href="javascript:void(0)" id="infoDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="dropdown-togglex dropdown-toggle-split ">
+                                            <i class="fas fa-bars"></i>
+                                        </span>
+                                    </a>
+                                    <!-- Dropdown - Chat Information -->
+                                    <div class="dropdown-menu dropdown-menu-right lite-shadow animated--grow-in" aria-labelledby="infoDropdown">  
+                                        <div class="active-group-action">
+                                            <a href="javascript:void(0)" title="{{ _('Mute') }}" class="dropdown-item active-group-mute " data-is-muted="0">
+                                                <span class="icon">
+                                                    <i class="fas fa-bell-slash"></i>
+                                                </span>
+                                                <span class="action-title">
+                                                    {{ _('Mute') }}
+                                                </span>
+                                            </a>
+                        
+                                            <a href="javascript:void(0)" class="dropdown-item init-report" data-report-type="3" data-report-header="" data-report-for="" >
+                                                <span class="icon">
+                                                    <i class="fas fa-flag"></i>
+                                                </span>
+                                                {{ _('Report') }}
+                                            </a>
+                        
+                                            <a href="javascript:void(0)" class="dropdown-item clear-chats" >
+                                                <span class="icon">
+                                                    <i class="fas fa-comment-slash"></i>
+                                                </span>
+                                                {{ _('Clear Chats') }}
+                                            </a>
+                        
+                                            <a href="javascript:void(0)" class="dropdown-item leave-room" data-room="{{chat_room.id}}" >
+                                                <span class="icon">
+                                                    <i class="fas fa-sign-out-alt"></i>
+                                                </span>
+                                                {{ _('Leave Room') }}
+                                            </a>
 
-                                
-                                <button data-toggle="tooltip" data-placement="bottom" class="btn btn-sm btn-notifications btn-tooltip " type="button" title="{{ _('Notifications') }}">
-                                    <i class="fas fa-bell"></i>
-                                    <span class="badge badge-danger badge-counter noti-count" style="display:none"></span>
-                                </button>
-                               
+                                            {% if (SETTINGS.enable_members_room is defined and SETTINGS.enable_members_room) and USER.user_type == 2 %}
+                                            <a class="dropdown-item new-chatroom" href="javascript:void(0)">
+                                                <span class="icon">
+                                                    <i class="fas fa-plus"></i>
+                                                </span>
+                                                {{ _('New Chat Room') }}
+                                            </a>
+                                            {% elseif (SETTINGS.enable_moderators_room is defined and SETTINGS.enable_moderators_room) and USER.user_type == 4 %}
+                                                <a class="dropdown-item new-chatroom" href="javascript:void(0)">
+                                                    <span class="icon">
+                                                        <i class="fas fa-plus"></i>
+                                                    </span>
+                                                    {{ _('New Chat Room') }}
+                                                </a>
+                                            {% elseif USER.user_type == 1 %}
+                                                <a class="dropdown-item new-chatroom" href="javascript:void(0)">
+                                                    <span class="icon">
+                                                        <i class="fas fa-plus"></i>
+                                                    </span>
+                                                    {{ _('New Chat Room') }}
+                                                </a>
+                                            {% endif %}
+                                            
+                                            {% if ( USER.user_type == 1 or USER.user_type == 4  or chat_room.created_by == USER.id or is_mod) and chat_room   %}
+                                                <div class="dropdown-divider"></div>
+                                                <a href="javascript:void(0)" class="dropdown-item view-chatroom"  data-room="{{chat_room.id}}" >
+                                                    <span class="icon">
+                                                        <i class="fas fa-users-cog"></i>
+                                                    </span>
+                                                    {{ _('Manage') }}
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                        <div class="active-user-action">
+                                            <!------------------ my code ---------------------->
+                                            <a href="javascript:void(0)" title="{{_('Make Paid')}}" class="dropdown-item active-user-paid" data-is-paid="0">
+                                                <span class="icon">
+                                                    <i class="far fa-comment"></i>
+                                                </span>
+                                                <span class="action-title">
+                                                    {{_('Make Paid')}}
+                                                </span>
+                                            </a>
+                                            <!------------------ my code ---------------------->
+                                            <a href="javascript:void(0)" title="{{_('Make Favorite')}}" class="dropdown-item active-user-favourite" data-is-favourite="0">
+                                                <span class="icon">
+                                                    <i class="far fa-heart"></i>
+                                                </span>
+                                                <span class="action-title">
+                                                    {{_('Make Favorite')}}
+                                                </span>
+                                            </a>
+                                            <a href="javascript:void(0)" title="{{_('Block')}}" class="dropdown-item active-user-block" data-is-blocked="0">
+                                                <span class="icon">
+                                                    <i class="far fa-circle"></i>
+                                                </span>
+                                                <span class="action-title">
+                                                    {{_('Block')}}
+                                                </span>
+                                            </a>
+                                            <a href="javascript:void(0)" title="{{_('Mute')}}" class="dropdown-item active-user-mute" data-is-muted="0">
+                                                <span class="icon">
+                                                    <i class="fas fa-bell-slash"></i>
+                                                </span>
+                                                <span class="action-title">
+                                                    {{ _('Mute') }}
+                                                </span>
+                                            </a>
+                                            <a href="javascript:void(0)" title="{{ _('Report') }}" class="dropdown-item init-report" data-report-type="2" data-report-header="" data-report-for="" >
+                                                <span class="icon">
+                                                    <i class="fas fa-flag"></i>
+                                                </span>
+                                                {{ _('Report') }}
+                                            </a>
+                                            <a href="javascript:void(0)" title="{{ _('Clear Chats') }}" class="dropdown-item clear-chats" >
+                                                <span class="icon">
+                                                    <i class="fas fa-comment-slash"></i>
+                                                </span>
+                                                {{ _('Clear Chats') }}
+                                            </a>
+                                        </div>
+                                        
+                                        <div class="dropdown-divider"></div>
+
+                                        <a href="javascript:void(0)" class="dropdown-item selected-chat-toggle ">
+                                            <span class="icon">
+                                                <i class="fas fa-info-circle"></i>
+                                            </span>
+                                            {{ _('Toggle Chat Info') }}
+                                        </a> 
                     
-                                <button class=" selected-chat-toggle btn btn-info btn-circle btn-sm">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
+                                    </div>
+                                </div>
+                                {# <button class="ml-2 selected-chat-toggle btn btn-info btn-circle btn-sm enable-selected-chat">
+                                    <i class="fa fa-info"></i>
+                                </button> #}
                             </div>
 
                         </nav>
@@ -519,9 +355,7 @@
                                 <ul class="chats">
                                 </ul>
                             </div>
-          
                             <div class="type-message animate__animated animate__flipInX" {% if disable_group_chats %}style='display:none;'{% endif %} {% if not IS_AUTHENTICATED or not joined_room %}style="display:none"{% endif %}>
-                                <small class="is-typing animate__animated animate__fadeInUp"><span>{{ _('typing...') }}</span> <i class="ml-1 fa fa-pencil-alt fa fa-pencil-alt animate__animated animate__infinite animate__slower15 animate__shakeX"></i></small>
                                 <div class="gse-row animate__animated animate__fadeInUp"></div>
                                 <div class="reply-msg-row" data-reply-id="">
                                     <div class="replied-to">
@@ -664,7 +498,173 @@
     </div>
     <!-- End of Content Wrapper -->
     <div class="flex-column col-3 distant  p-0 selected-chat-col">
-        
+        <nav class="navbar navbar-expand navbar-light  topbar static-top lite-shadow pl-1 nav-info">
+            <button data-toggle="tooltip" data-placement="bottom" class="btn btn-sm btn-notifications btn-tooltip" type="button" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge badge-danger badge-counter noti-count" style="display:none"></span>
+            </button>
+            {% if SETTINGS.enable_multiple_languages %}
+            <div class="dropdown lang-selector ml-auto">
+                <button class="btn btn-sm btn-lang dropdown-toggle" type="button" id="langSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span id="selected-lang-toggle"> <span class="flag-icon flag-icon-{{ LANG['country'] }}"></span>  </span>
+                </button>
+                <div class="dropdown-menu scrollable-menu" aria-labelledby="langSelector">
+                    {% for select_lang in lang_list %}
+                        <a class="dropdown-item {% if select_lang.code == LANG %}selected-lang{%endif%}" href="{{ url('setlang', {'reqlang':select_lang.code}) }}">
+                            <span class="flag-icon flag-icon-{{select_lang.country}}"></span> {{select_lang.name}}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <div class="pr-2 {% if not SETTINGS.enable_multiple_languages %}ml-auto{% endif %}">
+                <a class="nav-link" href="javascript:void(0)" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                    <span class="dropdown-toggle dropdown-toggle-split user-fname">
+                        {% if IS_AUTHENTICATED %}
+                            {% if SETTINGS.display_name_format == 'username' %}
+                                {{ USER.user_name }}
+                            {% else %}
+                                {{ USER.first_name }}
+                            {% endif %}
+                        {% else %}
+                           {{ _('Guest') }}
+                        {% endif %}
+                        <span class="current-status"><i class="fa fa-circle {{ USER.user_status_class }}"></i></span>
+                    </span>
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu-right lite-shadow animated--grow-in" aria-labelledby="userDropdown">
+                    {% if IS_AUTHENTICATED %}
+                    <a class="dropdown-item change-status" href="javascript:void(0)" data-status="1">
+                        <i class="fa fa-circle fa-fw mr-2 online"></i>{{ _('Online') }}
+                    </a>
+                    <a class="dropdown-item change-status" href="javascript:void(0)" data-status="2">
+                        <i class="fa fa-circle fa-fw mr-2 offline"></i>{{ _('Offline') }}
+                    </a>
+                    <a class="dropdown-item change-status" href="javascript:void(0)" data-status="3">
+                        <i class="fa fa-circle fa-fw mr-2 busy"></i>{{ _('Busy') }}
+                    </a>
+                    <a class="dropdown-item change-status" href="javascript:void(0)" data-status="4">
+                        <i class="fa fa-circle fa-fw mr-2 away"></i>{{ _('Away') }}
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    {% if SETTINGS.sso_enabled == false or SETTINGS.sso_allow_profile_edit == true %}
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#modalProfile">
+                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                        {{ _('Profile') }}
+                    </a>
+                    {% endif %}
+                    {% if USER.user_type == 1 %}
+                    <a class="dropdown-item" target="_blank" href="{{ url('dashboard') }}">
+                        <i class="fas fa-user-shield fa-sm fa-fw mr-2 text-gray-400"></i> {{ _('Admin Dashboard') }}
+                    </a>
+                    {% endif %}
+                    {% if USER.user_type == 2 %}
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#chatroomList">
+                        <i class="fas fa-comments fa-sm fa-fw mr-2 text-gray-400"></i>
+                        {{ _('My Rooms') }}
+                    </a>
+
+                    {% endif %}
+
+                    {% if (SETTINGS.enable_members_room is defined and SETTINGS.enable_members_room) and USER.user_type == 2 %}
+                        <a class="dropdown-item new-chatroom" href="javascript:void(0)">
+                            <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>{{ _('New Chat Room') }}
+                        </a>
+                    {% elseif (SETTINGS.enable_moderators_room is defined and SETTINGS.enable_moderators_room) and USER.user_type == 4 %}
+                        <a class="dropdown-item new-chatroom" href="javascript:void(0)">
+                            <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>{{ _('New Chat Room') }}
+                        </a>
+                    {% elseif USER.user_type == 1 %}
+                        <a class="dropdown-item new-chatroom" href="javascript:void(0)">
+                            <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>{{ _('New Chat Room') }}
+                        </a>
+                    {% endif %}
+
+                    {% if USER.user_type == 1 or USER.user_type == 4 %}
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#chatroomList">
+                        <i class="fas fa-comments fa-sm fa-fw mr-2 text-gray-400"></i>
+                        {{ _('Manage Rooms') }}
+                    </a>
+                    {% endif %}
+
+                    <!-- ==================== CHATBOT ====================  -->
+                    <a class="dropdown-item new-chatbot" href="javascript:void(0)">
+                        <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>{{ _('New Chatbot') }}
+                    </a>
+                    <!-- <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#chatbotList">
+                        <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>{{ _('New Chatbot') }}
+                    </a> -->
+                    <!-- ==================== /CHATBOT ====================  -->
+
+                    <div class="dropdown-divider"></div>
+
+                    {% endif %}
+
+                    {% if SETTINGS.theme == 'custom' and THEME != 'custom' %}
+                        <a class="dropdown-item" href="{{ url('settheme', {'reqtheme':'custom'}) }}">
+                            <i class="fas fa-adjust fa-sm fa-fw mr-2 text-gray-400"></i>
+                            {{ _('Switch to Default Theme') }}
+                        </a>
+                    {% endif %}
+                    {% if THEME != 'dark' %}
+                        <a class="dropdown-item" href="{{ url('settheme',  {'reqtheme':'dark'}) }}">
+                            <i class="fas fa-moon fa-sm fa-fw mr-2 text-gray-400"></i>
+                            {{ _('Switch to Dark Theme') }}
+                        </a>
+                    {% endif %}
+                    {% if THEME != 'light' %}    
+                    <a class="dropdown-item" href="{{ url('settheme',  {'reqtheme':'light'}) }}">
+                        <i class="fas fa-sun fa-sm fa-fw mr-2 text-gray-400"></i>
+                        {{ _('Switch to Light Theme') }}
+                    </a>
+                    {% endif %}
+                    {% if THEME != 'default' %}    
+                    <a class="dropdown-item" href="{{ url('settheme',  {'reqtheme':'default'}) }}">
+                        <i class="fas fa-cloud-moon fa-sm fa-fw mr-2 text-gray-400"></i>
+                        {{ _('Switch to Hybrid Theme') }}
+                    </a>
+                    {% endif %}
+
+                    <div class="dropdown-divider"></div>
+
+                    {% if SETTINGS.enable_about %}
+                    <a target="_blank" class="dropdown-item" href="{{ url('about') }}">{{ _('About Us') }}</a>
+                    {% endif %}
+
+                    {% if SETTINGS.enable_contact %}
+                    <a target="_blank" class="dropdown-item" href="{{ url('contact') }}">{{ _('Contact Us') }}</a>
+                    {% endif %}
+
+                    {% if SETTINGS.enable_privacy %}
+                    <a target="_blank" class="dropdown-item" href="{{ url('privacy') }}">{{ _('Privacy Policy') }}</a>
+                    {% endif %}
+
+                    {% if SETTINGS.enable_terms %}
+                    <a target="_blank" class="dropdown-item" href="{{ url('terms') }}">{{ _("Terms & Conditions") }}</a>
+                    {% endif %}
+
+                    <div class="dropdown-divider"></div>
+                    {% if IS_AUTHENTICATED %}
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#logoutModal">
+                        <i class="fas fa-power-off fa-sm fa-fw mr-2 text-gray-400"></i>
+                        {{ _('Logout') }}
+                    </a>
+                    {% else %}
+                    <a class="dropdown-item" {% if SETTINGS.sso_enabled and SETTINGS.sso_login_url %} href="{{ SETTINGS.sso_login_url }}" target="_parent" {% else %} href="{{ url('login') }}" {% endif %} >
+                        <i class="fas fa-power-off fa-sm fa-fw mr-2 text-gray-400"></i>
+                        {{ _('Sign In') }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <button class="selected-chat-toggle btn btn-info btn-circle btn-sm secondary">
+                <i class="fa  fa fa-info"></i>
+            </button>
+        </nav>
         <div class="panel-content-right" {% if disable_group_chats %}style='display:none;'{% endif %}>
             <div class="selected-chat height-fix active-group-info">
                 <div class="selected-chat-info">
@@ -672,125 +672,73 @@
                     <p class="selected-chat-name active-group-name"></p>
                 </div>
                 <div class="selected-chat-actions">
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{ _('Mute') }}" class="btn active-group-mute chat-info-action" data-is-muted="0">
+                        <span class="icon">
+                            <i class="fas fa-bell-slash"></i>
+                        </span>
+                    </a>
                     <div class="dropdown d-inline-block">
-                        <button class="btn chat-info-action" title="{{ _('Share this room') }}" type="button" id="roomShare" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="icon">
-                                <i class="fas fa-share-alt"></i>
-                            </span>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="roomShare">
-                            <a class="dropdown-item" href="javascript:void(0)" onclick='prompt("{{ _('Link to this room') }}:", "{{  url('chat-room', {'chatroomslug':chat_room.slug}) }}")'>
-                                <i class="fas fa-link"></i> {{ _('Get Link') }}
-                            </a>
-                            <a class="dropdown-item" target="_blank" href="https://facebook.com/sharer/sharer.php?u={{  url('chat-room', {'chatroomslug':chat_room.slug})|url_encode }}">
-                                <i class="fab fa-facebook"></i> {{ _('Share on Facebook') }}
-                            </a>
-                            <a class="dropdown-item" target="_blank" href="https://twitter.com/intent/tweet/?url={{  url('chat-room', {'chatroomslug':chat_room.slug})|url_encode }}&text={{chat_room.name}} - {{ SETTINGS.site_name }}">
-                                <i class="fab fa-twitter-square"></i> {{ _('Share on Twitter') }}
-                            </a>
-                            <a class="dropdown-item" target="_blank" href="mailto:?subject=Invitation: {{chat_room.name}} - {{ SETTINGS.site_name }}&body=You are invited to join {{chat_room.name}} on {{ SETTINGS.site_name }}. %0D%0AVisit: {{  url('chat-room', {'chatroomslug':chat_room.slug})|url_encode }}">
-                                <i class="fas fa-envelope-open-text"></i> {{ _('Email Invitation') }}
-                            </a>
-                            <a class="dropdown-item" target="_blank" href="whatsapp://send?text=You are invited to join {{chat_room.name}} on {{ SETTINGS.site_name }}. %0D%0AVisit: {{  url('chat-room', {'chatroomslug':chat_room.slug})|url_encode }}">
-                                <i class="fab fa-whatsapp"></i> {{ _('Invite via WhatsApp') }}
-                            </a>
-                            <a class="dropdown-item" target="_blank" href="https://telegram.me/share/url?text=You are invited to join {{chat_room.name}} on {{ SETTINGS.site_name }}&url={{  url('chat-room', {'chatroomslug':chat_room.slug})|url_encode }}">
-                                <i class="fab fa-telegram"></i> {{ _('Invite via Telegram') }}
-                            </a>
+                      <button class="btn chat-info-action" title="{{ _('Share this room') }}" type="button" id="roomShare" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <span class="icon">
+                              <i class="fas fa-share-alt"></i>
+                          </span>
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="roomShare">
+                        <a class="dropdown-item" href="javascript:void(0)" onclick='prompt("{{ _('Link to this room') }}:", "{{  url('chat-room', {'chatroomslug':chat_room.slug}) }}")'>
+                            <i class="fas fa-link"></i> {{ _('Get Link') }}
+                        </a>
+                        <a class="dropdown-item" target="_blank" href="https://facebook.com/sharer/sharer.php?u={{  url('chat-room', {'chatroomslug':chat_room.slug})|url_encode }}">
+                            <i class="fab fa-facebook"></i> {{ _('Share on Facebook') }}
+                        </a>
+                        <a class="dropdown-item" target="_blank" href="https://twitter.com/intent/tweet/?url={{  url('chat-room', {'chatroomslug':chat_room.slug})|url_encode }}&text={{chat_room.name}} - {{ SETTINGS.site_name }}">
+                            <i class="fab fa-twitter-square"></i> {{ _('Share on Twitter') }}
+                        </a>
+                        <a class="dropdown-item" target="_blank" href="mailto:?subject=Invitation: {{chat_room.name}} - {{ SETTINGS.site_name }}&body=You are invited to join {{chat_room.name}} on {{ SETTINGS.site_name }}. %0D%0AVisit: {{  url('chat-room', {'chatroomslug':chat_room.slug})|url_encode }}">
+                            <i class="fas fa-envelope-open-text"></i> {{ _('Email Invitation') }}
+                        </a>
+                        <a class="dropdown-item" target="_blank" href="whatsapp://send?text=You are invited to join {{chat_room.name}} on {{ SETTINGS.site_name }}. %0D%0AVisit: {{  url('chat-room', {'chatroomslug':chat_room.slug})|url_encode }}">
+                            <i class="fab fa-whatsapp"></i> Invite via WhatsApp
+                        </a>
+                        <a class="dropdown-item" target="_blank" href="https://telegram.me/share/url?text=You are invited to join {{chat_room.name}} on {{ SETTINGS.site_name }}&url={{  url('chat-room', {'chatroomslug':chat_room.slug})|url_encode }}">
+                            <i class="fab fa-telegram"></i> {{ _('Invite via Telegram') }}
+                        </a>
 
-                        </div>
+                      </div>
                     </div>
+                    <button class="btn chat-info-action roomEmbed" title="{{ _('Embed Code') }}" type="button" id="" >
+                        <span class="icon">
+                            <i class="fas fa-code"></i>
+                        </span>
+                    </button>
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{ _('Report') }}" class="btn init-report chat-info-action" data-report-type="3" data-report-header="" data-report-for="" >
+                        <span class="icon">
+                            <i class="fas fa-flag"></i>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{ _('Clear Chats') }}" class="btn clear-chats chat-info-action" >
+                        <span class="icon">
+                            <i class="fas fa-comment-slash"></i>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{ _('Leave Room') }}" class="btn leave-room chat-info-action" data-room="{{chat_room.id}}" >
+                        <span class="icon">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </span>
+                    </a>
 
                     <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{ _('Search') }}"  class="btn chat-info-action btn-chat-search ">
                         <span class="icon">
                             <i class="fa fa-search"></i>
                         </span>
                     </a>
-                    
-                    <div class="btn-group" role="group">
-                        <button id="group-options-dropdown" type="button" class="btn btn-primary btn-xs dropdown-toggle" id="optionDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Options
-                        </button>
-                        <!-- Dropdown - Chat Information -->
-                        <div class="dropdown-menu lite-shadow" aria-labelledby="group-options-dropdown">  
-                            <div class="active-group-action">
-                            
-                                <a href="javascript:void(0)" title="{{ _('Mute') }}" class="dropdown-item active-group-mute " data-is-muted="0">
-                                    <span class="icon">
-                                        <i class="fas fa-bell-slash"></i>
-                                    </span>
-                                    <span class="action-title">
-                                        {{ _('Mute') }}
-                                    </span>
-                                </a>
 
-                                <a href="javascript:void(0)" title="{{ _('Embed Code') }}" class="dropdown-item roomEmbed " >
-                                    <span class="icon">
-                                        <i class="fas fa-code"></i>
-                                    </span>
-                                    <span class="action-title">
-                                        {{ _('Embed Code') }}
-                                    </span>
-                                </a>
-            
-                                <a href="javascript:void(0)" class="dropdown-item init-report" data-report-type="3" data-report-header="" data-report-for="" >
-                                    <span class="icon">
-                                        <i class="fas fa-flag"></i>
-                                    </span>
-                                    {{ _('Report') }}
-                                </a>
-            
-                                <a href="javascript:void(0)" class="dropdown-item clear-chats" >
-                                    <span class="icon">
-                                        <i class="fas fa-comment-slash"></i>
-                                    </span>
-                                    {{ _('Clear Chats') }}
-                                </a>
-            
-                                <a href="javascript:void(0)" class="dropdown-item leave-room" data-room="{{chat_room.id}}" >
-                                    <span class="icon">
-                                        <i class="fas fa-sign-out-alt"></i>
-                                    </span>
-                                    {{ _('Leave Room') }}
-                                </a>
-
-                                {% if (SETTINGS.enable_members_room is defined and SETTINGS.enable_members_room) and USER.user_type == 2 %}
-                                <a class="dropdown-item new-chatroom" href="javascript:void(0)">
-                                    <span class="icon">
-                                        <i class="fas fa-plus"></i>
-                                    </span>
-                                    {{ _('New Chat Room') }}
-                                </a>
-                                {% elseif (SETTINGS.enable_moderators_room is defined and SETTINGS.enable_moderators_room) and USER.user_type == 4 %}
-                                    <a class="dropdown-item new-chatroom" href="javascript:void(0)">
-                                        <span class="icon">
-                                            <i class="fas fa-plus"></i>
-                                        </span>
-                                        {{ _('New Chat Room') }}
-                                    </a>
-                                {% elseif USER.user_type == 1 %}
-                                    <a class="dropdown-item new-chatroom" href="javascript:void(0)">
-                                        <span class="icon">
-                                            <i class="fas fa-plus"></i>
-                                        </span>
-                                        {{ _('New Chat Room') }}
-                                    </a>
-                                {% endif %}
-                                
-                                {% if ( USER.user_type == 1 or USER.user_type == 4  or chat_room.created_by == USER.id or is_mod) and chat_room   %}
-                                    <div class="dropdown-divider"></div>
-                                    <a href="javascript:void(0)" class="dropdown-item view-chatroom"  data-room="{{chat_room.id}}" >
-                                        <span class="icon">
-                                            <i class="fas fa-users-cog"></i>
-                                        </span>
-                                        {{ _('Manage') }}
-                                    </a>
-                                {% endif %}
-
-                            </div>
-        
-                        </div>
-                    </div>
+                    {% if ( USER.user_type == 1 or USER.user_type == 4  or chat_room.created_by == USER.id or is_mod) and chat_room   %}
+                        <a href="javascript:void(0)" title="{{ _('Manage') }}" data-toggle="tooltip" data-placement="top"  class="btn view-chatroom chat-info-action"  data-room="{{chat_room.id}}" >
+                            <span class="icon">
+                                <i class="fas fa-users-cog"></i>
+                            </span>
+                        </a>
+                    {% endif %}
 
                 </div>
                 
@@ -853,59 +801,41 @@
                     <p class="speech-bubble active-user-about"></p>
                 </div>
                 <div class="selected-chat-actions">
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{_('Add to Paid')}}" class="btn active-user-paid chat-info-action" data-is-paid="0">
+                        <span class="icon">
+                            <i class="far fa-comment"></i>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{_('Add to Favorites')}}" class="btn active-user-favourite chat-info-action" data-is-favourite="0">
+                        <span class="icon">
+                            <i class="far fa-heart"></i>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" title="{{_('Block')}}" class="btn active-user-block chat-info-action" data-is-blocked="0">
+                        <span class="icon ">
+                            <i class="far fa-circle"></i>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{_('Mute')}}" class="btn active-user-mute chat-info-action" data-is-muted="0">
+                        <span class="icon">
+                            <i class="fas fa-bell-slash"></i>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{ _('Report') }}" class="btn init-report chat-info-action" data-report-type="2" data-report-header="" data-report-for="" >
+                        <span class="icon">
+                            <i class="fas fa-flag"></i>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{ _('Clear Chats') }}" class="btn clear-chats chat-info-action" >
+                        <span class="icon">
+                            <i class="fas fa-comment-slash"></i>
+                        </span>
+                    </a>
                     <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="{{ _('Search') }}"  class="btn chat-info-action btn-chat-search ">
                         <span class="icon">
                             <i class="fa fa-search"></i>
                         </span>
                     </a>
-                    <div class="btn-group" role="group">
-                        <button id="user-options-dropdown" type="button" class="btn btn-primary btn-xs dropdown-toggle" id="optionDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Options
-                        </button>
-                        <!-- Dropdown - Chat Information -->
-                        <div class="dropdown-menu lite-shadow" aria-labelledby="user-options-dropdown">  
-                            <div class="active-user-action">
-                                <a href="javascript:void(0)" title="{{_('Make Favorite')}}" class="dropdown-item active-user-favourite" data-is-favourite="0">
-                                    <span class="icon">
-                                        <i class="far fa-heart"></i>
-                                    </span>
-                                    <span class="action-title">
-                                        {{_('Make Favorite')}}
-                                    </span>
-                                </a>
-                                <a href="javascript:void(0)" title="{{_('Block')}}" class="dropdown-item active-user-block" data-is-blocked="0">
-                                    <span class="icon">
-                                        <i class="far fa-circle"></i>
-                                    </span>
-                                    <span class="action-title">
-                                        {{_('Block')}}
-                                    </span>
-                                </a>
-                                <a href="javascript:void(0)" title="{{_('Mute')}}" class="dropdown-item active-user-mute" data-is-muted="0">
-                                    <span class="icon">
-                                        <i class="fas fa-bell-slash"></i>
-                                    </span>
-                                    <span class="action-title">
-                                        {{ _('Mute') }}
-                                    </span>
-                                </a>
-                                <a href="javascript:void(0)" title="{{ _('Report') }}" class="dropdown-item init-report" data-report-type="2" data-report-header="" data-report-for="" >
-                                    <span class="icon">
-                                        <i class="fas fa-flag"></i>
-                                    </span>
-                                    {{ _('Report') }}
-                                </a>
-                                <a href="javascript:void(0)" title="{{ _('Clear Chats') }}" class="dropdown-item clear-chats" >
-                                    <span class="icon">
-                                        <i class="fas fa-comment-slash"></i>
-                                    </span>
-                                    {{ _('Clear Chats') }}
-                                </a>
-                            </div>
-        
-                        </div>
-                    </div>
-                    
                 </div>
                 {% if chat_room.ad_chat_right_bar %}
                 <div class="advert ad_chat_right_bar responsive">
@@ -1049,7 +979,7 @@
             <div class="selected-chat height-fix notification-panel" style="display:none">
                 <div class="right-panel-header">
                     <div class="right-panel-text">
-                        {{_("Notifications")}}
+                        Notifications
                     </div>
                     <div class="right-panel-header-actions">
                         <button class="btn btn-sm notification-read-all btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="Mark All as Read"><i class="fas fa-check-square"></i></button>
@@ -1058,7 +988,7 @@
                     </div>
                     
                 </div>
-                <div class="card-body message-card-body notifications right-panel-messages">
+                <div class="card-body message-card-body notifications right-panel-messages height-fix">
                     <div class="notification-list">
 
                     </div>
@@ -1200,21 +1130,6 @@
                 </div>
                 <div class="modal-body">
                     <span id="video-embed-content"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="room-embed-modal">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{_("Room Embed Code")}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <span id="room-embed-content"></span>
                 </div>
             </div>
         </div>

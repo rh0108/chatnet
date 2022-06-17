@@ -549,8 +549,11 @@ $(document).on('keyup', '#name', function() {
     $('#slug').val(convertToSlug($(this).val()));
 });
 
-$( document ).ready(function() {
+$(document).ready(function() {
     // init date dropdown
+    // /**------------my code-------------------- */
+    $('.summernote').summernote();
+    // /**------------my code-------------------- */
     $(".dob").dateDropdowns();
     $('.dataTable').DataTable();
     $('.select2').select2({
@@ -624,7 +627,7 @@ function get_chatbot(){
                 setTimeout(function(){ $('.rooms-modal').modal('show'); }, 500);
                 $('#chatroomList').modal('hide');
                 $('.dataTable').DataTable();
-            }
+            }   
         },
         complete: function(){
             loading(".card-room-users", "hide");
@@ -693,7 +696,7 @@ $(document).on("click", '.edit-chatbot', function(event) {
     var chatbot_id = $(this).attr('data-chtbot');
     get_chatbot_by_id(chatbot_id);
 });
-/**=======================my code=========================== */
+// /**=======================my code=========================== */
 $(document).on("click", '.delete-chatbot', function(event) {
     var chatbot_id = $(this).attr('data-chtbot');
     delete_chatbot_by_id(chatbot_id);
@@ -715,7 +718,39 @@ function delete_chatbot_by_id(chatbot_id){
         }
     });
 }
-/**=======================my code=========================== */
+var next = 0;
+$(document).on("click", '#add-more', function(e) {
+        e.preventDefault();
+        var addto = "#field" + next;
+        var addRemove = "#field" + (next);
+        next = next + 1;
+        var newIn = ' <div id="field'+ next +'" name="field'+ next +'"><!-- Text input--><div class="form-group row"> <label class="col-sm-4 col-form-label" for="keyword">Keyword</label> <div class="col-sm-8"> <input type="text" class="form-control keyword" id="keyword" name="keyword'+ next +'" placeholder="Keyword" value=""> </div></div> <!-- Text input--><div class="form-group row"> <label class="col-sm-4 col-form-label" for="reply">Reply</label> <div class="col-sm-8"> <textarea name="reply'+ next +'" maxlength="500" id="reply" class="form-control reply summernote" rows="4" placeholder="Type what to reply..."></textarea> </div></div></div>';
+        var newInput = $(newIn);
+        var removeBtn = '<button id="remove' + (next - 1) + '" class="btn btn-danger remove-me" >Remove</button></div></div><div id="field">';
+        var removeButton = $(removeBtn);
+        $(addto).after(newInput);
+        $(addRemove).after(removeButton);
+        $("#field" + next).attr('data-source',$(addto).attr('data-source'));
+        $("#count").val(next);
+        $('.summernote').summernote();
+});
+
+$(document).on("click", '.remove-me', function(e) {
+    e.preventDefault();
+    var fieldNum = this.id.charAt(this.id.length-1);
+    var fieldID = "#field" + fieldNum;
+    $(this).remove();
+    $(fieldID).remove();
+});
+
+$(document).on('change', '#premium', function() {
+    if($(this).val() == 1) {
+        $('.premium-area').show();
+    }else{
+        $('.premium-area').hide();
+    }
+});
+// /**=======================my code=========================== */
 function get_chatbot_by_id(chatbot_id)
 {
     $.ajax({
