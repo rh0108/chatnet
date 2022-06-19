@@ -351,7 +351,7 @@ class Chat {
                     $sql = "SELECT
                         g.chat_group as group_id,
                         u.id as user_id, u.user_name, u.first_name, u.last_name, u.last_seen, IF(ADDTIME(u.last_seen, 10) >= NOW(), 1,0) as online_status, u.avatar, u.user_status, u.timezone, u.country, u.sex, u.user_type,
-                        IFNULL(cm.unread_count, 0) as unread_count, IFNULL(cm.is_blocked, 0) as blocked_by_him, IFNULL(cmr.is_favourite, 0) as is_favourite, IFNULL(cmr.is_muted, 0) as is_muted, IFNULL(cmr.is_blocked, 0) as blocked_by_you,
+                        IFNULL(cm.unread_count, 0) as unread_count, IFNULL(cm.is_blocked, 0) as blocked_by_him, IFNULL(cmr.is_favourite, 0) as is_favourite, IFNULL(cmr.is_paid, 0) as is_paid, IFNULL(cmr.is_muted, 0) as is_muted, IFNULL(cmr.is_blocked, 0) as blocked_by_you,
                         IFNULL(c.message, 0) as last_message, IFNULL(c.type, 0) as last_message_type, IFNULL(c.time, 0) as last_message_time, IFNULL(c.status, 0) as last_message_status, g.is_mod
                     FROM
                         cn_group_users g
@@ -574,7 +574,7 @@ class Chat {
         $sql = "SELECT
             '' as group_id,
             u.id as user_id, u.user_name, u.first_name, u.last_name, u.last_seen, IF(ADDTIME(u.last_seen, 10) >= NOW(), 1,0) as online_status, u.avatar, u.user_status, u.timezone, u.country, u.sex, u.user_type,
-            IFNULL(cm.unread_count, 0) as unread_count, IFNULL(cm.is_blocked, 0) as blocked_by_him, IFNULL(cmr.is_favourite, 0) as is_favourite, IFNULL(cmr.is_muted, 0) as is_muted, IFNULL(cmr.is_blocked, 0) as blocked_by_you,
+            IFNULL(cm.unread_count, 0) as unread_count, IFNULL(cm.is_blocked, 0) as blocked_by_him, IFNULL(cmr.is_favourite, 0) as is_favourite, IFNULL(cmr.is_paid, 0) as is_paid, IFNULL(cmr.is_muted, 0) as is_muted, IFNULL(cmr.is_blocked, 0) as blocked_by_you,
             IFNULL(c.message, 0) as last_message, IFNULL(c.type, 0) as last_message_type, IFNULL(c.time, 0) as last_message_time, IFNULL(c.status, 0) as last_message_status
         FROM
             cn_users u
@@ -904,6 +904,7 @@ class Chat {
             // /**=====================my code============== */
             if (array_key_exists('is_paid', $meta_data)) {
                 $update_data['is_paid'] = $meta_data['is_paid'];
+                $update_data['paid_category'] = '';
             }
             // /**=====================my code============== */
             if (array_key_exists('is_muted', $meta_data)) {
@@ -972,7 +973,9 @@ class Chat {
         app('db')->join($private_usersQ, "pc.to_user=u.id", "LEFT");
         app('db')->where ("pc.id = $private_minQ");
         app('db')->orderBy("pc.is_favourite","desc");
-        $group_users = app('db')->get("group_users gu", null, "gu.*, u.user_name, u.first_name, u.last_name, pc.is_favourite");
+        // /**==============my code================== */
+        $group_users = app('db')->get("group_users gu", null, "gu.*, u.user_name, u.first_name, u.last_name, pc.is_favourite, pc.is_paid");
+        // /**==============my code================== */
         return $group_users;
 
     }
@@ -1457,7 +1460,9 @@ class Chat {
             app('db')->where('pc.to_user', $active_user);
             app('db')->where("pc.id = $private_min_pc_Q");
             app('db')->where('pc.from_user', app('auth')->user()['id']);
-            $cols = Array("pc.is_favourite, pc.is_muted, pc.is_blocked as blocked_by_you, pcr.is_blocked as blocked_by_him");
+            // /**==============my code================== */
+            $cols = Array("pc.is_favourite, pc.is_paid, pc.is_muted, pc.is_blocked as blocked_by_you, pcr.is_blocked as blocked_by_him");
+            // /**==============my code================== */
             $access_data = app('db')->getOne('private_chat_meta pc', $cols);
 
             app('db')->where('id', $active_user);

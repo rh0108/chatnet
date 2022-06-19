@@ -11368,7 +11368,7 @@ div, span, ul {
 }
 
 
-.rtl ul.online-list li, .rtl ul.fav-list li {
+.rtl ul.online-list li, .rtl ul.fav-list li, .rtl ul.paid-list li {
 	padding-right: 15px;
     padding-left: 0px;
 }
@@ -11386,7 +11386,7 @@ div, span, ul {
     text-align: right;
 }
 
-.rtl .mini-user-list ul.online-list li, .rtl .mini-user-list ul.fav-list li {
+.rtl .mini-user-list ul.online-list li, .rtl .mini-user-list ul.fav-list li, .rtl .mini-user-list ul.paid-list li {
 	padding-right: 0px;
 }
 

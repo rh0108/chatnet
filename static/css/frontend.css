@@ -76,7 +76,7 @@ body {
     overflow-y: hidden;
 }
 
-.online-list, .fav-list, .dm-list {
+.online-list, .fav-list, .dm-list, .paid-list {
     list-style: none;
     padding-left: 0px;
     overflow-y: auto;
@@ -84,7 +84,7 @@ body {
     margin-bottom: 0px;
 }
 
-.online-list>div, .fav-list>div, .dm-list>div {
+.online-list>div, .fav-list>div, .dm-list>div, .paid-list>div {
     height: 58px;
     display: flex;
     padding-left: 15px;
@@ -1214,7 +1214,7 @@ img.emojione {
 }
 
 @media screen and (max-width: 425px) {
-    .online-list>div, .fav-list>div, .dm-list>div {
+    .online-list>div, .fav-list>div, .dm-list>div, .paid-list>div {
         padding-left: 6px;
     }
 
@@ -1499,7 +1499,7 @@ div#chats {
         flex: 0 0 100%;
     }
 
-    .online-list li, .fav-list li, .dm-list li {
+    .online-list li, .fav-list li, .dm-list li, .paid-list li {
         padding-left: 10px;
     }
 
@@ -1586,7 +1586,7 @@ li.recent-chat:hover {
     border-bottom: 1px solid rgb(66 66 66 / 63%);
 }
 
-.mini-user-list .online-list li, .mini-user-list .fav-list li, .mini-user-list .dm-list li{
+.mini-user-list .online-list li, .mini-user-list .fav-list li, .mini-user-list .dm-list li, .mini-user-list .paid-list li{
     padding-left: 0px;
 }
 
@@ -3011,7 +3011,7 @@ button:focus {
     background-color: transparent;
 }
 
-.mini-user-list .online-list>div, .mini-user-list .fav-list>div, .mini-user-list .mobile-sidebar-icon, .mini-user-list .dm-list>div {
+.mini-user-list .online-list>div, .mini-user-list .fav-list>div, .mini-user-list .paid-list>div, .mini-user-list .mobile-sidebar-icon, .mini-user-list .dm-list>div {
 	padding-left: 0px;
 }
 

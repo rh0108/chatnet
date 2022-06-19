@@ -1,0 +1,42 @@
+<!-- ==================== CHATBOT CATEGORY==================== -->
+<form id="chatbot-category-info" enctype="multipart/form-data">
+    <div class="tab-content" id="v-pills-tabContent">
+        <div class="alert alert-danger chatbot-category-error" role="alert" style="display:none"></div>
+        <div class="alert alert-success chatbot-category-success" role="alert" style="display:none"></div>
+        <input type="hidden" name="chatbot_category_row" id="chatbot_category_row" value="{{ chatbot_category_row.id }}">
+        <div class="card card-create-bot">
+            <div class="card-body">
+                {{ csrf_token()|raw }}
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="category">{{_('Category',2)}}</label>
+                    
+                    <div class="col-sm-8">
+                        <input name="category_name" id="category_name" class="form-control" placeholder="{{_('Type new category...')}}" value="{{chatbot_category_row.category_name|raw}}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4 col-form-label"  for="category_status">
+                        {{_("Status")}}
+                    </label>
+                    <div class="col-sm-8">
+                        <label class="switch">
+                            {% if chatbot_category_row.status == 1 %}
+                                <input type="checkbox" name="category_status" id="category_status" checked>
+                            {% else %}
+                                <input type="checkbox" name="category_status" id="category_status" >
+                            {% endif %}
+                            
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-footer card-footer p-0 pt-3">
+                <button type="button" class="btn btn-primary update-chatbot-category">{{_("Submit")}}</button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger ">{{_("Close")}}</button>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- ==================== CHATBOT CATEGORY==================== -->

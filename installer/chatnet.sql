@@ -221,6 +221,7 @@ CREATE TABLE IF NOT EXISTS `cn_private_chat_meta` (
   `is_typing` tinyint(1) DEFAULT '0',
   `is_blocked` tinyint(1) DEFAULT '0',
   `is_favourite` tinyint(1) DEFAULT '0',
+  `is_paid` tinyint(1) DEFAULT '0',
   `is_muted` tinyint DEFAULT '0',
   `unread_count` int DEFAULT '0',
   `last_chat_id` int DEFAULT NULL,

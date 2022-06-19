@@ -558,9 +558,67 @@ class Admin
         }
     }
     // ==================== CHATBOT ====================
+    // /**==============my code================== */
+    function updateChatbotCategory($post_data){
+        $data = Array (
+            "user_id"   => app('auth')->user()['id'],
+            "category_name" => $post_data['category_name'],
+            "status" => ($post_data['category_status']) == 'on' ? 1 : 0
+        );
+        app('db')->where ('id', $post_data['chatbot_category_row']);
+        app('db')->update('chatbot_category', $data);
+        $status = true;
+        $message = 'Updated successfully';
+        return json_response(["success" => $status, "message" => $message, "info" => $data]);
+
+    }
+    function updateChatbotPaid($post_data){
+        app('db')->where('user_id',app('auth')->user()['id']);
+        $category_name = app('db')->get('chatbot_category');
+        for($i = 0; $i < count($category_name); $i++){
+            if($post_data[$category_name[$i]['category_name']]){
+                $cate_id = $cate_id. $category_name[$i]['id'] . ',';
+            }
+        }
+        $data = Array (
+            "paid_category"   => $cate_id       
+        );
+        app('db')->where ('id', $post_data['chat_meta_id']);
+        app('db')->update('private_chat_meta', $data);
+        $status = true;
+        $message = 'Updated successfully';
+        return json_response(["success" => $status, "message" => $message, "info" => $data]);
+
+    }
+    // /**==============my code================== */
     function updateChatbot($post_data)
     {
         // /**==============my code================== */
+        if($post_data['new_category'] !='' && $post_data['category'] == 0) {
+            $category_data = array();
+            $category_data['user_id'] = app('auth')->user()['id'];
+            $category_data['category_name'] = $post_data['new_category'];
+            $category_data['status'] = 1;
+            app('db')->where('user_id',app('auth')->user()['id']);
+            app('db')->where('category_name',$post_data['new_category']);
+            $aaa = app('db')->get('chatbot_category');
+            if($aaa){die();}
+            else{
+                app('db')->insert('chatbot_category', $category_data);
+            }
+            app('db')->where('user_id',app('auth')->user()['id']);
+            app('db')->where('category_name',$post_data['new_category']);
+            $category_id = app('db')->get('chatbot_category');
+        }else if ($post_data['category'] == 1){
+            app('db')->where('user_id',app('auth')->user()['id']);
+            $category_name = app('db')->get('chatbot_category');
+            for($i = 0; $i < count($category_name); $i++){
+                if($post_data[$category_name[$i]['category_name']]){
+                    $cate_id = $cate_id. $category_name[$i]['id'] . ',';
+                }
+            }
+        }
+        // var_dump($cate_id);die();
         for ($i = 0; $i < 100; $i++){
             if ($post_data['keyword'.$i] != ''){
                 $data = Array (
@@ -573,7 +631,8 @@ class Admin
                     "is_detect_keyword" => ($post_data['is_detect_keyword']) && $post_data['is_detect_keyword'] == 'on' ? 1 : 0,
                     "is_matching_word" => ($post_data['is_matching_word']) && $post_data['is_matching_word'] == 'on' ? 1 : 0,
                     // "is_global" => ($post_data['is_global']) && $post_data['is_global'] == 'on' ? 1 : 0,
-                    "status" =>$post_data['status']
+                    "status" =>$post_data['status'],
+                    "category_id" => $post_data['category'] == 0 ? $category_id[0]['id']: $cate_id
                 );
                 $status = true;
                 $message = array();

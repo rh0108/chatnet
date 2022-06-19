@@ -1,13 +1,13 @@
 <!-- ==================== CHATBOT ==================== -->
-<!-- /**------------my code-------------------- */ -->
-<link href="{{STATIC_URL}}/admin/vendor/summernote/summernote.min.css" rel="stylesheet" type="text/css">
-<!-- /**------------my code-------------------- */ -->
 <ul class="nav nav-pills mb2">
     <li class="nav-item">
         <a class="nav-link active" id="create-bot-tab" data-toggle="pill" href="#create-bot" role="tab" aria-controls="create-bot" aria-selected="true"><i class="fas fa-user"></i> {{_("New Chatbot")}}</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" id="chatbot-list-tab" data-toggle="pill" href="#chatbot-list" role="tab" aria-controls="chatbot-list" aria-selected="false"><i class="fas fa-user-clock"></i> {{_("Bot Lists")}}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="chatbot-category-list-tab" data-toggle="pill" href="#chatbot-category-list" role="tab" aria-controls="chatbot-category-list" aria-selected="false"><i class="fas fa-users"></i> {{_("Bot Category Lists")}}</a>
     </li>
 
 </ul>
@@ -27,23 +27,26 @@
                     <label class="col-sm-4 col-form-label" for="category">{{_('Category',2)}}</label>
                     <div class="col-sm-4">
                         <select class="form-control" id="category" name="category">
-                            <option value="1" {% if SETTINGS.category == 1 %}selected{% endif %}>{{_('Yes',2)}}</option>
-                            <option value="0" {% if SETTINGS.category == 0 %}selected{% endif %}>{{_('No',2)}}</option>
+                            <option value="1" {% if SETTINGS.category == 1 %}selected{% endif %}>{{_('Current',2)}}</option>
+                            <option value="0" {% if SETTINGS.category == 0 %}selected{% endif %}>{{_('New',2)}}</option>
                         </select>
                     </div>
                     <div class="col-sm-4">
-                        <select class="select" multiple>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                            <option value="4">Four</option>
-                            <option value="5">Five</option>
-                          </select>
-                          <label class="form-label select-label">Example label</label>
+                        <input name="new_category" id="new_category" class="form-control" placeholder="{{_('Type new category...')}}">{{SETTINGS.new_category|raw}}</input>
                     </div>
                 </div>
-
-
+                <div class="form-group row category-area" {% if SETTINGS.category == 0 %}style="display:none;"{% endif %}>
+                    <label class="col-sm-4 col-form-label" for="category_reply">{{_('Current Caregory',2)}}</label>
+                    <div class="col-sm-8">
+                        {% for chatbot_category_val in chatbot_category %}
+                        <label class="col-form-label" for="{{chatbot_category_val.category_name}}">{{chatbot_category_val.category_name}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span><label class="switch">
+                            <input type="checkbox" name="{{chatbot_category_val.category_name}}" id="{{chatbot_category_val.category_name}}" >
+                            <span class="slider round"></span>
+                        </label></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {% endfor %}
+                    </div>
+                </div>
 
                 <div id="field">
                     <div id="field0">
@@ -118,20 +121,6 @@
                     </div>
                 </div>
                 
-                <!-- /**=======================my code=========================== */ -->
-                <!-- <div class="row">
-                    <label class="col-sm-4 col-form-label"  for="is_global">
-                        {{_("Global")}}
-                    </label>
-                    <div class="col-sm-8">
-                        <label class="switch">
-                            <input type="checkbox" name="is_global" id="is_global" >
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                </div> -->
-                <!-- /**=======================my code=========================== */ -->
-                
                 <div class="form-group row">
                     <label class="col-sm-4 col-form-label" for="status">{{_("Status")}}</label>
                     <div class="col-sm-8">
@@ -180,6 +169,43 @@
 
         </div>
     </div>
+
+    <div class="tab-pane fade" id="chatbot-category-list" role="tabpanel" aria-labelledby="chatbot-category-list-tab">
+        <div class="card card-create-bot">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>{{_("Category Name")}}</th>
+                                <th>{{_("Status")}}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for chatbot_category_list_val in chatbot_category %}
+                            <tr>
+                                <td>{{chatbot_category_list_val.category_name}}</td>
+                                {% if chatbot_category_list_val.status == 1 %}
+                                <td>{{_("Allow")}}</td>
+                                {% else %}
+                                <td>{{_("Disable")}}</td>
+                                {% endif %}
+                                <td>
+                                    <div class="text-nowrap">
+                                        <button type="button"  class="btn btn-primary btn-xs kick-btn edit-chatbot-category" data-chtbot-category="{{chatbot_category_list_val.id}}" data-restriction-type="3" style="display:inline-block"><i class="fas fa-eye"></i> Edit</button>
+                                        <button type="button"  class="btn btn-danger btn-xs kick-btn delete-chatbot-category" data-chtbot-category="{{chatbot_category_list_val.id}}" data-restriction-type="3" style="display:inline-block"><i class="fas fa-eye"></i> Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
  </form>
  <!-- /**------------my code-------------------- */ -->
@@ -188,6 +214,6 @@
         $('.summernote').summernote();
     });
   </script>
-  <script src="{{STATIC_URL}}/admin/vendor/summernote/summernote.min.js"></script>
+
   <!-- /**------------my code-------------------- */ -->
   <!-- ==================== /CHATBOT ==================== -->

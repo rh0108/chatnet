@@ -1,0 +1,30 @@
+<form id="chatbot-paid-info" enctype="multipart/form-data">
+    <div class="tab-content" id="v-pills-tabContent">
+        <div class="alert alert-danger chatbot-error" role="alert" style="display:none"></div>
+        <div class="alert alert-success chatbot-success" role="alert" style="display:none"></div>
+        <input type="hidden" name="chat_meta_id" id="chat_meta_id" value="{{ chat_meta_id }}">
+        <div class="card card-create-bot">
+            <div class="card-body">
+                
+                {{ csrf_token()|raw }}
+
+                <div class="form-group row category-area">
+                    <label class="col-sm-4 col-form-label" for="category_reply">{{_('Current Caregory',2)}}</label>
+                    <div class="col-sm-8">
+                        {% for chatbot_category_val in chatbot_category %}
+                        <label class="col-form-label" for="{{chatbot_category_val.category_name}}">{{chatbot_category_val.category_name}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span><label class="switch">
+                            <input type="checkbox" name="{{chatbot_category_val.category_name}}" id="{{chatbot_category_val.category_name}}" >
+                            <span class="slider round"></span>
+                        </label></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer card-footer p-0 pt-3">
+                <button type="button" class="btn btn-primary update-paid-user">{{_("Submit")}}</button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger ">{{_("Close")}}</button>
+            </div>
+        </div>
+    </div>
+</form>

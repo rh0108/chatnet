@@ -135,6 +135,7 @@ if (file_exists(BASE_PATH.'config/settings.php')) {
     $route->any('ajax/send-audio', 'App\ajaxController@send_audio')->as('ajax-send-audio');
     $route->any('ajax/get-strickers', 'App\ajaxController@get_stickers')->as('ajax-get-stickers');
     $route->any('ajax/active-user-restriction', 'App\ajaxController@active_user_restriction')->as('ajax-active-user-restriction');
+    $route->any('ajax/active-user-restriction-category', 'App\ajaxController@active_user_restriction_category')->as('ajax-active-user-restriction-category');
     $route->any('ajax/active-group-restriction', 'App\ajaxController@active_group_restriction')->as('ajax-active-group-restriction');
     $route->any('ajax/change-user-status', 'App\ajaxController@change_user_status')->as('ajax-change-user-status');
     $route->any('ajax/update-settings', 'App\ajaxController@update_settings')->as('ajax-update-settings');
@@ -186,6 +187,9 @@ if (file_exists(BASE_PATH.'config/settings.php')) {
     $route->any('ajax/update-chatbot', 'App\ajaxController@update_chatbot')->as('ajax-update-chatbot');
     $route->any('ajax/get-chatbot-row', 'App\ajaxController@get_chatbot_row')->as('ajax-get-chatbot-row');
     /**=======================my code=========================== */
+    $route->any('ajax/update-chatbot-paid', 'App\ajaxController@update_chatbot_paid')->as('ajax-update-chatbot-paid');
+    $route->any('ajax/update-chatbot-category', 'App\ajaxController@update_chatbot_category')->as('ajax-update-chatbot-category');
+    $route->any('ajax/get-chatbot-category-row', 'App\ajaxController@get_chatbot_category_row')->as('ajax-get-chatbot-category-row');
     $route->any('ajax/update-chatbot-time', 'App\ajaxController@update_chatbot_time')->as('ajax-update-chatbot-time');
     $route->any('ajax/delete-chatbot', 'App\ajaxController@delete_chatbot')->as('ajax-delete-chatbot');
     /**=======================my code=========================== */

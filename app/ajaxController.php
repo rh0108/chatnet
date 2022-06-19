@@ -848,7 +848,9 @@ class ajaxController{
             $allow_guest_view = true;
         }
         if ($allow_guest_view == false) {
-            if(in_array($post_data['user_list_section'], ['room', 'fav', 'forward'])){
+            // ===================my code=================
+            if(in_array($post_data['user_list_section'], ['room', 'fav', 'forward', 'paid'])){
+                // ===================my code=================
                 $_SESSION['last_loaded_users_count'] = 0;
                 $data = app('chat')->get_active_list($post_data['active_room']);
             }else if($post_data['user_list_section'] == "dm"){
@@ -871,7 +873,9 @@ class ajaxController{
         $q = app('purify')->xss_clean($post_data['q']);
 
         if (app('auth')->isAuthenticated() == true) {
-            if(in_array($post_data['user_list_section'], ['room', 'fav'])){
+            // ===================my code=================
+            if(in_array($post_data['user_list_section'], ['room', 'fav', 'paid'])){
+                // ===================my code=================
                 $_SESSION['last_loaded_users_count'] += 20;
                 $data = app('chat')->get_active_list($post_data['active_room'], false, $q);
             }else if($post_data['user_list_section'] == "dm"){
@@ -958,6 +962,15 @@ class ajaxController{
         $current_user = app('auth')->user()['id'];
         app('db')->where ('user_id', $current_user);
         $data['chatbot_list'] = app('db')->get('chatbot');
+
+        $active_user = $post_data['active_user'];
+        app('db')->where('from_user',$current_user);
+        app('db')->where('to_user',$active_user);
+        $data['active_user_category'] = app('db')->get('private_chat_meta');
+
+        app('db')->where('user_id',$current_user);
+        app('db')->where('status',1);
+        $data['current_user_category'] = app('db')->get('chatbot_category');
         /**=======================my code=========================== */
         $data['updated_chats'] = $updated_chats;
 
@@ -1122,7 +1135,6 @@ class ajaxController{
         echo json_encode($data);
     }
 
-
     // process active user restriction
     public function active_user_restriction(){
         $post_data = app('request')->body;
@@ -1136,6 +1148,16 @@ class ajaxController{
         $update_meta[$post_data['restriction_type']] = $new_status;
         app('chat')->updateChatMetaData($update_meta);
         return json_response(["success" => 'true', "type" => $post_data['restriction_type'], "status" => $new_status]);
+    }
+
+    public function active_user_restriction_category(){
+        $post_data = app('request')->body;
+        $current_user = app('auth')->user()['id'];
+        $data = array();
+        app('db')->where('user_id',$current_user);
+        $data['chatbot_category'] = app('db')->get('chatbot_category');
+        $data['chat_meta_id'] = $post_data['chat_meta_id'];
+        echo app('twig')->render('make_paid_user.html', $data);
     }
 
     // process active group restriction
@@ -2161,6 +2183,10 @@ class ajaxController{
         $data = array();
         app('db')->where ('user_id', $current_user);
         $data['chatbot_list'] = app('db')->get('chatbot');
+        // ===================my code=================
+        app('db')->where('user_id',$current_user);
+        $data['chatbot_category'] = app('db')->get('chatbot_category');
+        // ===================my code=================
         echo app('twig')->render('chatbot_add.html', $data);
     }
     public function update_chatbot(){
@@ -2168,6 +2194,18 @@ class ajaxController{
         $update_chatbot = app('admin')->updateChatbot($post_data);
         return $update_chatbot;
     }
+    // ===================my code=================
+    public function update_chatbot_paid(){
+        $post_data = app('request')->body;
+        $update_chatbot_paid = app('admin')->updateChatbotPaid($post_data);
+        return $update_chatbot_paid;
+    }
+    public function update_chatbot_category(){
+        $post_data = app('request')->body;
+        $update_chatbot_category = app('admin')->updateChatbotCategory($post_data);
+        return $update_chatbot_category;
+    }
+    // ===================my code=================
     public function get_chatbot_row()
     {
         $post_data = app('request')->body;
@@ -2175,9 +2213,22 @@ class ajaxController{
         $data = array();
         app('db')->where ('id', $post_data['chatbot_id']);
         $data['chatbot_row'] = app('db')->getOne('chatbot');
+        // ===================my code=================
+        app('db')->where('user_id',$current_user);
+        $data['chatbot_category'] = app('db')->get('chatbot_category');
+        // ===================my code=================
         echo app('twig')->render('chatbot_edit.html', $data);
     }
     /**=======================my code=========================== */
+    public function get_chatbot_category_row()
+    {
+        $post_data = app('request')->body;
+        $current_user = app('auth')->user()['id'];
+        $data = array();
+        app('db')->where ('id', $post_data['chatbot_category_id']);
+        $data['chatbot_category_row'] = app('db')->getOne('chatbot_category');
+        echo app('twig')->render('chatbot_category_edit.html', $data);
+    }
     public function update_chatbot_time(){
         $post_data = app('request')->body;
         $current_user = app('auth')->user()['id'];

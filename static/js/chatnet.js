@@ -1498,7 +1498,7 @@ function loadActiveUsers(){
                         $('.load-more-dm-users').show();
                     }
                 }
-            }else{
+            }else if(user_list_sec == 'fav'){
                 $('.online-list').empty();
                 $('.fav-list').empty();
                 if ('default_group' in data) {
@@ -1545,12 +1545,116 @@ function loadActiveUsers(){
                             $('.fav-list').append(chat_li);
                         }
                     });
+                    // /**==============my code================== */
+                    if(parseInt($('#chat_room_user_count').val()) > 21){
+                        $('.load-more-users').show();
+                    }
+                }
+            }else if(user_list_sec == 'paid'){
+                $('.online-list').empty();
+                $('.paid-list').empty();
+                if ('default_group' in data) {
+                    var unread_count_html = "";
+                    var group_mute_icon = "";
+                    if(data.default_group.unread_count > 0){
+                        if (data.default_group.unread_count > 9) {
+                            var unread_cnt = '9+';
+                        }else{
+                            var unread_cnt = data.default_group.unread_count;
+                        }
+                        unread_count_html = `<span class="badge badge-danger badge-counter">` + unread_cnt + `</span>`;
+                    }
+                    if(data.default_group.is_muted){
+                        group_mute_icon = `<i class="fas fa-bell-slash"></i>`;
+                    }
+                    var group_li =
+                    `<div id="" class="recent-chat chat-item group-item" data-user-id="">
+                        <div class="user-list-item ">
+                            <div class="user-avatar">
+                                <img class="img-profile mr-2" src="` + data.default_group.cover_url + `">
+                            </div>
+                            <div class="user-info">
+                                <div class="chat-name">` + data.default_group.room_data.name + ` ` + group_mute_icon + `</div>
+                                <div class="chat-preview">
+                                    ` + data.default_group.room_data.name + ` {{_('Chat Room')}}
+                                </div>
+                            </div>
+                            <div class="chat-meta">` + unread_count_html + `</div>
+                        </div>
+                    </div><hr class="group-sep">`;
 
+                    $('.online-list').append(group_li);
+
+                }
+
+
+                if ('list' in data) {
+
+                    $.each(data.list, function( index, obj ) {
+                        var chat_li = createOnlineUser(obj);
+                        $('.online-list').append(chat_li);
+                        if(obj.is_paid && !obj.blocked_by_you){
+                            $('.paid-list').append(chat_li);
+                        }
+                    });
+                    // /**==============my code================== */
+                    if(parseInt($('#chat_room_user_count').val()) > 21){
+                        $('.load-more-users').show();
+                    }
+                }
+            }else {
+                $('.online-list').empty();
+                $('.fav-list').empty();
+                if ('default_group' in data) {
+                    var unread_count_html = "";
+                    var group_mute_icon = "";
+                    if(data.default_group.unread_count > 0){
+                        if (data.default_group.unread_count > 9) {
+                            var unread_cnt = '9+';
+                        }else{
+                            var unread_cnt = data.default_group.unread_count;
+                        }
+                        unread_count_html = `<span class="badge badge-danger badge-counter">` + unread_cnt + `</span>`;
+                    }
+                    if(data.default_group.is_muted){
+                        group_mute_icon = `<i class="fas fa-bell-slash"></i>`;
+                    }
+                    var group_li =
+                    `<div id="" class="recent-chat chat-item group-item" data-user-id="">
+                        <div class="user-list-item ">
+                            <div class="user-avatar">
+                                <img class="img-profile mr-2" src="` + data.default_group.cover_url + `">
+                            </div>
+                            <div class="user-info">
+                                <div class="chat-name">` + data.default_group.room_data.name + ` ` + group_mute_icon + `</div>
+                                <div class="chat-preview">
+                                    ` + data.default_group.room_data.name + ` {{_('Chat Room')}}
+                                </div>
+                            </div>
+                            <div class="chat-meta">` + unread_count_html + `</div>
+                        </div>
+                    </div><hr class="group-sep">`;
+
+                    $('.online-list').append(group_li);
+
+                }
+
+
+                if ('list' in data) {
+
+                    $.each(data.list, function( index, obj ) {
+                        var chat_li = createOnlineUser(obj);
+                        $('.online-list').append(chat_li);
+                        if(obj.is_favourite && !obj.blocked_by_you){
+                            $('.fav-list').append(chat_li);
+                        }
+                    });
                     if(parseInt($('#chat_room_user_count').val()) > 21){
                         $('.load-more-users').show();
                     }
                 }
             }
+            // /**==============my code================== */
 
             if(data.unread_dm_total > 0){
                 $('.dm-all-unread').html(data.unread_dm_total);
@@ -2220,6 +2324,16 @@ function roomUserSearch(){
                                 var chat_li = createOnlineUser(obj);
                                 if(obj.is_favourite && !obj.blocked_by_you){
                                     $('.fav-list').append(chat_li);
+                                }
+                            });
+                        }
+                    }else if (search_from == 'paid'){
+                        $(".paid-list").empty();
+                        if ('list' in data) {
+                            $.each(data.list, function( index, obj ) {
+                                var chat_li = createOnlineUser(obj);
+                                if(obj.is_paid && !obj.blocked_by_you){
+                                    $('.paid-list').append(chat_li);
                                 }
                             });
                         }
@@ -4921,14 +5035,14 @@ $( document ).ready(function() {
 
     // Left sidebar active user list heartbeat
     var run_online_list = true;
-    $('.fav-list, .online-list, .dm-list').mouseenter(function(){
+    $('.fav-list, .paid-list, .online-list, .dm-list').mouseenter(function(){
         run_online_list=false;
         window.setInterval(function(){
             run_online_list=true;
         }, 30000);
 
     });
-    $('.fav-list, .online-list, .dm-list').mouseleave(function(){run_online_list=true;});
+    $('.fav-list, .paid-list, .online-list, .dm-list').mouseleave(function(){run_online_list=true;});
     window.setInterval(function(){
         if (room_user_search_mode==false && run_online_list==true) {
             loadActiveUsers();
@@ -4991,20 +5105,58 @@ $( document ).ready(function() {
                                         }
                                     }
                                 }
-                                // alert(chatbot_keyword.length);
                                 if(chatbot_keyword.length == 1 && keywords.length == 1 &&chatbot_keyword['0'] == keywords['0'] && data.chatbot_list[i]['is_detect_keyword'] == 1 && data.chatbot_list[i]['status'] == 1 && data.chatbot_list[i]['first'] == 0){
                                     check = 1;
                                     var update_time = new Date();
 
                                     updateChatBotTime(data.chatbot_list[i]['id'],moment(update_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm:ss'));
-                                    newMessage(data.chatbot_list[i]['reply'].replace(/{NAME}/g,'{{ USER.user_name }}'), 1, false);
+                                    if(data.active_user_category['0']['is_paid'] == 0){
+                                        newMessage(data.chatbot_list[i]['reply'].replace(/{NAME}/g,'{{ USER.user_name }}'), 1, false);
+                                    }else {
+                                        var chatbot_category = data.chatbot_list[i]['category_id'].split(",");
+                                        var active_user_category = data.active_user_category['0']['paid_category'].split(",");
+                                        var category_id = 0;
+                                        for(var k = 0; k < chatbot_category.length; k++){
+                                            for(var l = 0; l < active_user_category.length; l++){
+                                                if(chatbot_category[k] == active_user_category[l]){
+                                                    category_id = chatbot_category[k];
+                                                    for( var m = 0; m < data.current_user_category.length; m++){
+                                                        if(data.current_user_category[m]['id'] == category_id){
+                                                            newMessage(data.chatbot_list[i]['premium_reply'].replace(/{NAME}/g,'{{ USER.user_name }}'), 1, false);
+                                                        }
+                                                    }   
+
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 
                             }
                             if (max_count_id >= 0 && check == 0) {
                                 var update_time = new Date();
                                 updateChatBotTime(data.chatbot_list[max_count_id]['id'],moment(update_time.getTime()).tz(SETTINGS.system_timezone).format('YYYY-MM-DD HH:mm:ss'));
-                                newMessage(data.chatbot_list[max_count_id]['reply'].replace(/{NAME}/g,'{{ USER.user_name }}'), 1, false);
+                                // newMessage(data.chatbot_list[max_count_id]['reply'].replace(/{NAME}/g,'{{ USER.user_name }}'), 1, false);
+                                if(data.active_user_category['0']['is_paid'] == 0){
+                                    newMessage(data.chatbot_list[max_count_id]['reply'].replace(/{NAME}/g,'{{ USER.user_name }}'), 1, false);
+                                }else {
+                                    var chatbot_category = data.chatbot_list[max_count_id]['category_id'].split(",");
+                                    var active_user_category = data.active_user_category['0']['paid_category'].split(",");
+                                    var category_id = 0;
+                                    for(var k = 0; k < chatbot_category.length; k++){
+                                        for(var l = 0; l < active_user_category.length; l++){
+                                            if(chatbot_category[k] == active_user_category[l]){
+                                                category_id = chatbot_category[k];
+                                                for( var m = 0; m < data.current_user_category.length; m++){
+                                                    if(data.current_user_category[m]['id'] == category_id){
+                                                        newMessage(data.chatbot_list[max_count_id]['premium_reply'].replace(/{NAME}/g,'{{ USER.user_name }}'), 1, false);
+                                                    }
+                                                }   
+
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                         /**=======================my code=========================== */

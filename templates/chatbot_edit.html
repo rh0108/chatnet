@@ -1,4 +1,7 @@
 <!-- ==================== CHATBOT ==================== -->
+<!-- /**------------my code-------------------- */ -->
+<link href="{{STATIC_URL}}/admin/vendor/summernote/summernote.min.css" rel="stylesheet" type="text/css">
+<!-- /**------------my code-------------------- */ -->
 <form id="chatbot-info" enctype="multipart/form-data">
 <div class="tab-content" id="v-pills-tabContent">
     <div class="alert alert-danger chatbot-error" role="alert" style="display:none"></div>
@@ -8,20 +11,95 @@
         <div class="card-body">
             
             {{ csrf_token()|raw }}
-            
-           
+            <!-- /**------------my code-------------------- */ -->
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="category">{{_('Category',2)}}</label>
+                <div class="col-sm-4">
+                    <select class="form-control" id="category" name="category">
+                        <option value="1" selected>{{_('Current',2)}}</option>
+                        <option value="0" >{{_('New',2)}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <input name="new_category"  style="display:none;" id="new_category" class="form-control" placeholder="{{_('Type new category...')}}">{{SETTINGS.new_category|raw}}</input>
+                </div>
+            </div>
+            <div class="form-group row category-area">
+                <label class="col-sm-4 col-form-label" for="category_reply">{{_('Current Caregory',2)}}</label>
+                <div class="col-sm-8">
+                    {% for chatbot_category_val in chatbot_category %}
+                    <label class="col-form-label" for="{{chatbot_category_val.category_name}}">{{chatbot_category_val.category_name}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span><label class="switch">
+                        <input type="checkbox" name="{{chatbot_category_val.category_name}}" id="{{chatbot_category_val.category_name}}" >
+                        <span class="slider round"></span>
+                    </label></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    {% endfor %}
+                </div>
+            </div>
+
             <div class="form-group row">
                 <label class="col-sm-4 col-form-label" for="keyword">{{_('Keyword')}}</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="keyword" name="keyword" placeholder="{{_('Keyword')}}" value=" {{ chatbot_row.keyword }}">
+                    <input type="text" class="form-control" id="keyword" name="keyword0" placeholder="{{_('Keyword')}}" value=" {{ chatbot_row.keyword }}">
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-4 col-form-label" for="reply">{{_('Reply')}}</label>
                 <div class="col-sm-8">
-                    <textarea name="reply" maxlength="500" id="reply" class="form-control" rows="4" placeholder="{{_('Type what to reply...')}}">{{ chatbot_row.reply }}</textarea>
+                    <textarea name="reply0" maxlength="500"  class="form-control summernote reply" rows="4" placeholder="{{_('Type what to reply...')}}">{{ chatbot_row.reply }}</textarea>
                 </div>
             </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="premium">{{_('Premium',2)}}</label>
+                <div class="col-sm-8">
+                    <select class="form-control" id="premium" name="premium">
+                        {% if chatbot_row.premium == 0 %}
+                            <option value="1" >{{_('Yes',2)}}</option>
+                            <option value="0" selected>{{_('No',2)}}</option>
+                        {% else %}
+                            <option value="1" selected>{{_('Yes',2)}}</option>
+                            <option value="0" >{{_('No',2)}}</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row premium-area" {% if chatbot_row.premium == 0 %}style="display:none;"{% endif %}>
+                <label class="col-sm-4 col-form-label" for="premium_reply">{{_('Reply',2)}}</label>
+                <div class="col-sm-8">
+                    <textarea name="premium_reply"  class="form-control summernote" rows="8" cols="80">{{chatbot_row.premium_reply|raw}}</textarea>
+                </div>
+            </div>
+                       
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="auto_delete">{{_('Auto Delete',2)}}</label>
+                <div class="col-sm-8">
+                    <select class="form-control" id="auto_delete" name="auto_delete">
+                        {% if chatbot_row.auto_delete == 0 %}
+                        <option value="0" selected>{{_('None',2)}}</option>
+                        <option value="1" >{{_('24 Hours',2)}}</option>
+                        <option value="2" >{{_('48 Hours',2)}}</option>
+                        <option value="3" >{{_('72 Hours',2)}}</option>
+                        {% elseif chatbot_row.auto_delete == 1 %}
+                        <option value="0" >{{_('None',2)}}</option>
+                        <option value="1" selected>{{_('24 Hours',2)}}</option>
+                        <option value="2" >{{_('48 Hours',2)}}</option>
+                        <option value="3" >{{_('72 Hours',2)}}</option>
+                        {% elseif chatbot_row.auto_delete == 2 %}
+                        <option value="0" >{{_('None',2)}}</option>
+                        <option value="1" >{{_('24 Hours',2)}}</option>
+                        <option value="2" selected>{{_('48 Hours',2)}}</option>
+                        <option value="3" >{{_('72 Hours',2)}}</option>
+                        {% elseif chatbot_row.auto_delete == 3 %}
+                        <option value="0" >{{_('None',2)}}</option>
+                        <option value="1" >{{_('24 Hours',2)}}</option>
+                        <option value="2" >{{_('48 Hours',2)}}</option>
+                        <option value="3" selected>{{_('72 Hours',2)}}</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+            <!-- /**------------my code-------------------- */ -->
             <div class="row">
                 <label class="col-sm-4 col-form-label"  for="is_detect_keyword">
                     {{_("Detect Keyword")}}
@@ -93,4 +171,12 @@
     </div>
 </div>
  </form>
- <!-- ==================== /CHATBOT ==================== -->
+<!-- /**------------my code-------------------- */ -->
+<script src="{{STATIC_URL}}/admin/vendor/summernote/summernote.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.summernote').summernote();
+    });
+</script>
+<!-- /**------------my code-------------------- */ -->
+<!-- ==================== /CHATBOT ==================== -->

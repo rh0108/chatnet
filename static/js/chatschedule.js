@@ -21,6 +21,9 @@
     }
 
     var favourite_user_list = [];
+    // /**==============my code================== */
+    var paid_user_list = [];
+    // /**==============my code================== */
     loadFavUsers();
 
     $(document).on('click', '.btn-send-schedule', function(e) {        
@@ -326,6 +329,11 @@
                         if(obj.is_favourite && !obj.blocked_by_you){
                             favourite_user_list.push(obj);
                         }
+                        // /**==============my code================== */
+                        if(obj.is_paid && !obj.blocked_by_you){
+                            paid_user_list.push(obj);
+                        }
+                        // /**==============my code================== */
                     });                      
                 }                
             }
